@@ -16,12 +16,12 @@ class Kette {
     private ArrayList<Node> kette2d = new ArrayList<>();
 
     //Constructor
-    Kette(String new_string) {
+    public Kette(String new_string) {
         kette = new_string;
     }
 
     //generates random coords for the nodes
-    void generateRandom() {
+    public void generateRandom() {
         int new_value = Character.getNumericValue(kette.charAt(0));
         kette2d.add(new Node(0, 0, new_value));
         int next_x = 0;
@@ -73,6 +73,81 @@ class Kette {
         }
     }
 
+
+    public int calcMinEnergie() {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < kette2d.size(); i++) {
+            if (kette2d.get(i).getValue() == 1) {
+
+                int i_x = kette2d.get(i).getX();
+                int i_y = kette2d.get(i).getY();
+
+                for (int j = 0; j < kette2d.size(); j++) {
+                    if (i != j && kette2d.get(j).getValue() == 1) { //not the same and both 1
+                        if (i - 1 != j && i + 1 != j) { //not connected
+                            int j_x = kette2d.get(j).getX();
+                            int j_y = kette2d.get(j).getY();
+                            if ((i_x + 1 == j_x || i_x - 1 == j_x) && i_y == j_y) { // x is nearby y the same
+                                map.put(i_x + j_x + i_y + j_y + i + j, 1); //hash map key is just a bunch of unique values for that connection
+                            }
+                            if ((i_y + 1 == j_y || i_y - 1 == j_y) && i_x == j_x) { // y is nearby x the same
+                                map.put(i_x + j_x + i_y + j_y + i + j, 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return map.size();
+    }
+
+    //craft the image
+    public void createImage() {
+
+        int[] imageData = calcImageSize();
+        int width = imageData[0];
+        int height = imageData[1];
+        int start_x = imageData[2];
+        int start_y = imageData[3];
+
+
+        //initialize the graphic
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = image.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+        //create Background
+        g2.setColor(Color.GRAY);
+        g2.fillRect(0, 0, width, height);
+
+        //Get color of the first node
+        if (kette2d.get(0).getValue() == 1) { //hydrophil
+            g2.setColor(Color.BLACK);
+        } else {
+            g2.setColor(Color.WHITE); //hydrophob
+        }
+
+        //create the initial node
+        g2.fillRect(start_x, start_y, cellSize, cellSize);
+
+        //create all other nodes
+        drawNodes(g2, start_x, start_y);
+
+        //create image
+        String folder = "/tmp/alex/ga";
+        String filename = "Kette.png";
+        if (!new File(folder).exists()) {
+            new File(folder).mkdirs();
+        }
+
+        try {
+            ImageIO.write(image, "png", new File(folder + File.separator + filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+
     //checks if a given coordinate is free
     private boolean checkNext(int x, int y) {
         for (Node node : kette2d) {
@@ -110,80 +185,6 @@ class Kette {
         }
 
         return blocked == 4;
-    }
-
-    Integer calcMinEnergie() {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < kette2d.size(); i++) {
-            if (kette2d.get(i).getValue() == 1) {
-
-                int i_x = kette2d.get(i).getX();
-                int i_y = kette2d.get(i).getY();
-
-                for (int j = 0; j < kette2d.size(); j++) {
-                    if (i != j && kette2d.get(j).getValue() == 1) { //not the same and both 1
-                        if (i - 1 != j && i + 1 != j) { //not connected
-                            int j_x = kette2d.get(j).getX();
-                            int j_y = kette2d.get(j).getY();
-                            if ((i_x + 1 == j_x || i_x - 1 == j_x) && i_y == j_y) { // x is nearby y the same
-                                map.put(i_x + j_x + i_y + j_y + i + j, 1); //hash map key is just a bunch of unique values for that connection
-                            }
-                            if ((i_y + 1 == j_y || i_y - 1 == j_y) && i_x == j_x) { // y is nearby x the same
-                                map.put(i_x + j_x + i_y + j_y + i + j, 1);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return map.size();
-    }
-
-    //craft the image
-    void createImage() {
-
-        int[] imageData = calcImageSize();
-        int width = imageData[0];
-        int height = imageData[1];
-        int start_x = imageData[2];
-        int start_y = imageData[3];
-
-
-        //initialize the graphic
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = image.createGraphics();
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-        //create Background
-        g2.setColor(Color.GRAY);
-        g2.fillRect(0, 0, width, height);
-
-        //Get color of the first node
-        if (kette2d.get(0).getValue() == 1) { //hydrophil
-            g2.setColor(Color.BLACK);
-        } else {
-            g2.setColor(Color.WHITE); //hydrophob
-        }
-
-        //create the initial node
-        g2.fillRect(start_x, start_y, cellSize, cellSize);
-
-        //create all other nodes
-        drawNodes(g2, start_x, start_y);
-
-        //create image
-        String folder = "/tmp/alex/ga";
-        String filename = "Kette.png";
-        if (!new File(folder).exists()){
-            new File(folder).mkdirs();
-        }
-
-        try {
-            ImageIO.write(image, "png", new File(folder + File.separator + filename));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
     }
 
     private int[] calcImageSize() {
