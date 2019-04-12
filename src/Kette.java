@@ -21,7 +21,7 @@ class Kette {
     }
 
     //generates random coords for the nodes
-    public void generateRandom() {
+    public boolean generateRandom() {
         int new_value = Character.getNumericValue(kette.charAt(0));
         kette2d.add(new Node(0, 0, new_value));
         int next_x = 0;
@@ -60,7 +60,8 @@ class Kette {
                 if (counter >= 30) { //activates check after 30 consecutive fails
                     if (checkBlocked()) {
                         System.out.println("Aborted... no where to go from here");
-                        return;
+                        kette2d.clear();
+                        return false;
                     } else {
                         System.out.print("triggered suroundcheck");
                         counter = 0;
@@ -71,6 +72,7 @@ class Kette {
             kette2d.add(new Node(next_x, next_y, Character.getNumericValue(kette.charAt(i))));
 
         }
+        return true;
     }
 
 
