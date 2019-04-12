@@ -120,16 +120,6 @@ class Kette {
         g2.setColor(Color.GRAY);
         g2.fillRect(0, 0, width, height);
 
-        //Get color of the first node
-        if (kette2d.get(0).getValue() == 1) { //hydrophil
-            g2.setColor(Color.BLACK);
-        } else {
-            g2.setColor(Color.WHITE); //hydrophob
-        }
-
-        //create the initial node
-        g2.fillRect(start_x, start_y, cellSize, cellSize);
-
         //create all other nodes
         drawNodes(g2, start_x, start_y);
 
@@ -222,6 +212,17 @@ class Kette {
 
     private void drawNodes(Graphics2D g2, int start_x, int start_y) {
 
+        //Get color of the first node
+        if (kette2d.get(0).getValue() == 1) { //hydrophil
+            g2.setColor(Color.BLACK);
+        } else {
+            g2.setColor(Color.WHITE); //hydrophob
+        }
+
+        //create the initial node
+        g2.fillRect(start_x, start_y, cellSize, cellSize);
+        drawIndex(g2,0,start_x,start_y);
+
         //needed later to draw the lines between nodes
         int last_x = start_x;
         int last_y = start_y;
@@ -241,6 +242,8 @@ class Kette {
 
             //draw yourself
             g2.fillRect(current_x, current_y, cellSize, cellSize);
+
+            drawIndex(g2,i,current_x,current_y);
 
             //draw line
             drawLine(g2, current_x, current_y, last_x, last_y);
@@ -306,5 +309,27 @@ class Kette {
                 g2.drawLine(current_x + cellSize, current_y + cellSize / 2, last_x, last_y + cellSize / 2); //left
             }
         }
+    }
+
+    private void drawIndex(Graphics2D g2, int index, int current_x, int current_y){
+
+        // choose a color
+        if (kette2d.get(index).getValue() == 1){
+            g2.setColor(Color.WHITE); //white on black and the other way around
+        }else{
+            g2.setColor(Color.BLACK);
+        }
+
+        //create Text
+        String label = Integer.toString(index);
+        int fontSize = 60;
+        Font font = new Font("Serif", Font.PLAIN, fontSize);
+        g2.setFont(font);
+        FontMetrics metrics = g2.getFontMetrics();
+        int offset = fontSize/3; // center text
+        int labelWidth = metrics.stringWidth(label);
+
+        //draw Text
+        g2.drawString(label, current_x + cellSize/2 - labelWidth/2 , current_y + cellSize/2 + offset);
     }
 }
