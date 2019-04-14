@@ -85,9 +85,7 @@ class Kette {
 
                 for (int j = 0; j < kette2d.size(); j++) {
 
-                    if (i != j && kette2d.get(j).getValue() == 1) { //not the same and both 1
-
-                        if (Math.abs(i - j) != 1) { //not connected
+                    if (Math.abs(i - j) > 1 && kette2d.get(j).getValue() == 1) { //not the same and both 1
 
                             int j_x = kette2d.get(j).getX();
                             int j_y = kette2d.get(j).getY();
@@ -97,7 +95,6 @@ class Kette {
                             }else if (Math.abs(i_y - j_y) == 1 && i_x == j_x) { // y is +-1 x the same
                                 counter ++;
                             }
-                        }
                     }
                 }
             }
