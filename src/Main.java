@@ -3,7 +3,7 @@ class Main {
         Kette kette = new Kette("11010101011110100010001000010001000101111010101011");
         boolean success;
         do { //generate a valid graph
-            success = kette.generateRandom();
+            success = kette.generateRandomGraph();
         } while (!success);
         kette.createImage();
         System.out.println("Minimale Energie: " + kette.calcMinEnergie());

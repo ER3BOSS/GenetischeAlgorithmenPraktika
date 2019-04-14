@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 
@@ -16,66 +15,108 @@ class Kette {
     private ArrayList<Node> kette2d = new ArrayList<>();
 
     //Constructor
-    public Kette(String new_string) {
+    Kette(String new_string) {
         kette = new_string;
     }
 
     //generates random coords for the nodes
-    public boolean generateRandom() {
+    boolean generateRandomGraph() {
+
+        //create first node at 0,0
         int new_value = Character.getNumericValue(kette.charAt(0));
         kette2d.add(new Node(0, 0, new_value));
-        int next_x = 0;
-        int next_y = 0;
+
+        int[] nextPos;
 
         for (int i = 1; i < kette.length(); i++) {
-            boolean nextFree = false;
+
             int counter = 0;
 
-            int current_x = kette2d.get(kette2d.size() - 1).getX();
-            int current_y = kette2d.get(kette2d.size() - 1).getY();
-
-            while (!nextFree) {
-                int direction = new Random().nextInt(4);
-                switch (direction) {
-                    case 0: //up
-                        next_x = current_x;
-                        next_y = current_y + 1;
-                        break;
-                    case 1: //down
-                        next_x = current_x;
-                        next_y = current_y - 1;
-                        break;
-                    case 2: //left
-                        next_x = current_x - 1;
-                        next_y = current_y;
-                        break;
-                    case 3: //right
-                        next_x = current_x + 1;
-                        next_y = current_y;
-                        break;
-                }
-                if (checkNext(next_x, next_y)) {
-                    nextFree = true;
-                }
+            do {
+                nextPos = generateRandomPos();
                 if (counter >= 30) { //activates check after 30 consecutive fails
-                    if (checkBlocked()) {
+                    if (checkSurroundings()) {
                         System.out.println("Aborted... no where to go from here");
                         kette2d.clear();
                         return false;
-                    } else {
-                        System.out.print("triggered suroundcheck");
-                        counter = 0;
                     }
                 }
                 counter++;
-            }
-            kette2d.add(new Node(next_x, next_y, Character.getNumericValue(kette.charAt(i))));
 
+            } while (coordinateUnavailable(nextPos[0], nextPos[1]));
+
+            kette2d.add(new Node(nextPos[0], nextPos[1], Character.getNumericValue(kette.charAt(i))));
         }
+
+
         return true;
     }
 
-    public int calcMinEnergie() {
+    private int[] generateRandomPos() {
+        // retrieve current pos
+        int current_x = kette2d.get(kette2d.size() - 1).getX();
+        int current_y = kette2d.get(kette2d.size() - 1).getY();
+
+        // store potential x,y
+        int next_x = 0;
+        int next_y = 0;
+
+        int direction = new Random().nextInt(4); //random 0 - 3
+        switch (direction) {
+            case 0: //up
+                next_x = current_x;
+                next_y = current_y + 1;
+                break;
+            case 1: //down
+                next_x = current_x;
+                next_y = current_y - 1;
+                break;
+            case 2: //left
+                next_x = current_x - 1;
+                next_y = current_y;
+                break;
+            case 3: //right
+                next_x = current_x + 1;
+                next_y = current_y;
+                break;
+        }
+
+        return new int[]{next_x, next_y};
+    }
+
+    private boolean checkSurroundings() { //checks if all possible directions are unavailable
+
+        int current_x = kette2d.get(kette2d.size() - 1).getX();
+        int current_y = kette2d.get(kette2d.size() - 1).getY();
+
+        int blocked = 0;
+
+        if (coordinateUnavailable(current_x, current_y + 1)) {//up
+            blocked++;
+        }
+        if (coordinateUnavailable(current_x, current_y - 1)) {//down
+            blocked++;
+        }
+        if (coordinateUnavailable(current_x - 1, current_y)) {//left
+            blocked++;
+        }
+        if (coordinateUnavailable(current_x + 1, current_y)) {//right
+            blocked++;
+        }
+
+        return blocked == 4;
+    }
+
+    private boolean coordinateUnavailable(int x, int y) {//checks if a given coordinate is free
+        for (Node node : kette2d) {
+            if (node.getX() == x && node.getY() == y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    int calcMinEnergie() {
         int counter = 0;
         for (int i = 0; i < kette2d.size(); i++) {
             if (kette2d.get(i).getValue() == 1) {
@@ -87,23 +128,22 @@ class Kette {
 
                     if (Math.abs(i - j) > 1 && kette2d.get(j).getValue() == 1) { //not the same and both 1
 
-                            int j_x = kette2d.get(j).getX();
-                            int j_y = kette2d.get(j).getY();
+                        int j_x = kette2d.get(j).getX();
+                        int j_y = kette2d.get(j).getY();
 
-                            if (Math.abs(i_x - j_x) == 1  && i_y == j_y) { // x is +-1 y the same
-                                counter ++;
-                            }else if (Math.abs(i_y - j_y) == 1 && i_x == j_x) { // y is +-1 x the same
-                                counter ++;
-                            }
+                        if (Math.abs(i_x - j_x) == 1 && i_y == j_y) { // x is +-1 y the same
+                            counter++;
+                        } else if (Math.abs(i_y - j_y) == 1 && i_x == j_x) { // y is +-1 x the same
+                            counter++;
+                        }
                     }
                 }
             }
         }
-        return counter/2; //every connection is listed 2 times (a to b and b to a)
+        return counter / 2; //every connection is listed 2 times (a to b and b to a)
     }
 
-    //craft the image
-    public void createImage() {
+    void createImage() {
 
         int[] imageData = calcImageSize();
         int width = imageData[0];
@@ -121,16 +161,17 @@ class Kette {
         g2.setColor(Color.GRAY);
         g2.fillRect(0, 0, width, height);
 
-        //create all other nodes
-        drawNodes(g2, start_x, start_y);
+        drawNodes(g2, start_x, start_y); //each node also draws an index and a line
 
-        //create image
-        String folder = "/tmp/alex/ga";
-        String filename = "Kette.png";
+        //create folder
+        String folder = "/ga";
         if (!new File(folder).exists()) {
+            //noinspection ResultOfMethodCallIgnored
             new File(folder).mkdirs();
         }
 
+        //create image
+        String filename = "Kette.png";
         try {
             ImageIO.write(image, "png", new File(folder + File.separator + filename));
         } catch (IOException e) {
@@ -139,49 +180,9 @@ class Kette {
         }
     }
 
-    //checks if a given coordinate is free
-    private boolean checkNext(int x, int y) {
-        for (Node node : kette2d) {
-            if (node.getX() == x && node.getY() == y) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean checkBlocked() {
-
-        int current_x = kette2d.get(kette2d.size() - 1).getX();
-        int current_y = kette2d.get(kette2d.size() - 1).getY();
-
-        int blocked = 0;
-        //up
-        if (!checkNext(current_x, current_y + 1)) {
-            blocked++;
-        }
-
-        //down
-        if (!checkNext(current_x, current_y - 1)) {
-            blocked++;
-        }
-
-        //left
-        if (!checkNext(current_x - 1, current_y)) {
-            blocked++;
-        }
-
-        //right
-        if (!checkNext(current_x + 1, current_y)) {
-            blocked++;
-        }
-
-        return blocked == 4;
-    }
-
     private int[] calcImageSize() {
 
         int[] lowHighXY = calcLowHighCoords();
-
         int low_x = lowHighXY[0];
         int high_x = lowHighXY[1];
         int low_y = lowHighXY[2];
@@ -198,31 +199,25 @@ class Kette {
             y_lines = 0;
         }
 
-        int[] returnValues = new int[4];
-
         //calc with/height in a way that everything fits (+ a border of one cellSize)
-        returnValues[0] = cellSize + (low_x * -1 + high_x) * cellSize + x_lines + 3 * cellSize; //width
-        returnValues[1] = cellSize + (low_y * -1 + high_y) * cellSize + y_lines + 3 * cellSize; //height
+        int width = cellSize + (low_x * -1 + high_x) * cellSize + x_lines + 3 * cellSize; //width
+        int height = cellSize + (low_y * -1 + high_y) * cellSize + y_lines + 3 * cellSize; //height
 
         int[] startPos = calcStartPos(low_x, low_y);
-        returnValues[2] = startPos[0]; //start_x
-        returnValues[3] = startPos[1]; //start_y
+        int start_x = startPos[0]; //start_x
+        int start_y = startPos[1]; //start_y
 
-        return returnValues; // width, height, start_x, start_y
+        return new int[]{width, height, start_x, start_y};
     }
 
     private void drawNodes(Graphics2D g2, int start_x, int start_y) {
 
-        //Get color of the first node
-        if (kette2d.get(0).getValue() == 1) { //hydrophil
-            g2.setColor(Color.BLACK);
-        } else {
-            g2.setColor(Color.WHITE); //hydrophob
-        }
+        //Set color of the first node
+        setNodeColor(g2, 0);
 
         //create the initial node
         g2.fillRect(start_x, start_y, cellSize, cellSize);
-        drawIndex(g2,0,start_x,start_y);
+        drawIndex(g2, 0, start_x, start_y);
 
         //needed later to draw the lines between nodes
         int last_x = start_x;
@@ -235,19 +230,13 @@ class Kette {
             int current_x = start_x + (kette2d.get(i).getX() * cellSize * 2);
             int current_y = start_y + (kette2d.get(i).getY() * cellSize * 2);
 
-            //get your color
-            if (kette2d.get(i).getValue() == 1) { //hydrophil
-                g2.setColor(Color.BLACK);
-            } else {
-                g2.setColor(Color.WHITE); //hydrophob
-            }
+            setNodeColor(g2, i);
 
             //draw yourself
             g2.fillRect(current_x, current_y, cellSize, cellSize);
 
-            drawIndex(g2,i,current_x,current_y);
+            drawIndex(g2, i, current_x, current_y);
 
-            //draw line
             drawLine(g2, current_x, current_y, last_x, last_y);
 
             //save your coords (needed to draw the next line)
@@ -256,10 +245,10 @@ class Kette {
         }
     }
 
-    private int[] calcLowHighCoords() {
-        //get the lowest and highest x/y coords
+    private int[] calcLowHighCoords() {//get the lowest and highest x/y coords
 
-        int[] returnValues = new int[4];
+        int low_x, high_x, low_y, high_y;
+        low_x = high_x = low_y = high_y = 0;
 
         for (Node node : kette2d) {
 
@@ -268,30 +257,53 @@ class Kette {
             int y = node.getY();
 
             //check if there are new lowest/highest x/y values
-            if (x < returnValues[0]) {
-                returnValues[0] = x;//low x
+            if (x < low_x) {
+                low_x = x;
             }
-            if (x > returnValues[1]) {
-                returnValues[1] = x; //high x
+            if (x > high_x) {
+                high_x = x;
             }
-            if (y < returnValues[2]) {
-                returnValues[2] = y; //low y
+            if (y < low_y) {
+                low_y = y;
             }
-            if (y > returnValues[3]) {
-                returnValues[3] = y; // high y
+            if (y > high_y) {
+                high_y = y;
             }
         }
-        return returnValues; //low_x, high_x, low_y, high_y
+        return new int[]{low_x, high_x, low_y, high_y};
     }
 
     private int[] calcStartPos(int low_x, int low_y) {//calculates the position of the first node
 
-        int[] returnValues = new int[2];
+        int start_x = 2 * -low_x * cellSize + cellSize; //start_x
+        int start_y = 2 * -low_y * cellSize + cellSize; //start_y
 
-        returnValues[0] = 2 * -low_x * cellSize + cellSize; //start_x
-        returnValues[1] = 2 * -low_y * cellSize + cellSize; //start_y
+        return new int[]{start_x, start_y};
+    }
 
-        return returnValues;
+    private void setNodeColor(Graphics2D g2, int index) {
+        if (kette2d.get(index).getValue() == 1) { //hydrophil
+            g2.setColor(Color.BLACK);
+        } else {
+            g2.setColor(Color.WHITE); //hydrophob
+        }
+    }
+
+    private void drawIndex(Graphics2D g2, int index, int current_x, int current_y) {
+
+        setTextColor(g2, index);
+
+        //create Text
+        String label = Integer.toString(index);
+        int fontSize = 60;
+        Font font = new Font("Serif", Font.PLAIN, fontSize);
+        g2.setFont(font);
+        FontMetrics metrics = g2.getFontMetrics();
+        int offset = fontSize / 3; // center text
+        int labelWidth = metrics.stringWidth(label);
+
+        //draw Text
+        g2.drawString(label, current_x + cellSize / 2 - labelWidth / 2, current_y + cellSize / 2 + offset);
     }
 
     private void drawLine(Graphics2D g2, int current_x, int current_y, int last_x, int last_y) {
@@ -313,25 +325,11 @@ class Kette {
         }
     }
 
-    private void drawIndex(Graphics2D g2, int index, int current_x, int current_y){
-
-        // choose a color
-        if (kette2d.get(index).getValue() == 1){
-            g2.setColor(Color.WHITE); //white on black and the other way around
-        }else{
-            g2.setColor(Color.BLACK);
+    private void setTextColor(Graphics2D g2, int index) {
+        if (kette2d.get(index).getValue() == 1) { //hydrophil
+            g2.setColor(Color.WHITE);
+        } else {
+            g2.setColor(Color.BLACK); //hydrophob
         }
-
-        //create Text
-        String label = Integer.toString(index);
-        int fontSize = 60;
-        Font font = new Font("Serif", Font.PLAIN, fontSize);
-        g2.setFont(font);
-        FontMetrics metrics = g2.getFontMetrics();
-        int offset = fontSize/3; // center text
-        int labelWidth = metrics.stringWidth(label);
-
-        //draw Text
-        g2.drawString(label, current_x + cellSize/2 - labelWidth/2 , current_y + cellSize/2 + offset);
     }
 }
