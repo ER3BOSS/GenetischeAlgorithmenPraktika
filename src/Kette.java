@@ -75,9 +75,8 @@ class Kette {
         return true;
     }
 
-
     public int calcMinEnergie() {
-        HashMap<Integer, Integer> map = new HashMap<>();
+        int counter = 0;
         for (int i = 0; i < kette2d.size(); i++) {
             if (kette2d.get(i).getValue() == 1) {
 
@@ -85,22 +84,25 @@ class Kette {
                 int i_y = kette2d.get(i).getY();
 
                 for (int j = 0; j < kette2d.size(); j++) {
+
                     if (i != j && kette2d.get(j).getValue() == 1) { //not the same and both 1
+
                         if (i - 1 != j && i + 1 != j) { //not connected
+
                             int j_x = kette2d.get(j).getX();
                             int j_y = kette2d.get(j).getY();
-                            if ((i_x + 1 == j_x || i_x - 1 == j_x) && i_y == j_y) { // x is nearby y the same
-                                map.put(i_x + j_x + i_y + j_y + i + j, 1); //hash map key is just a bunch of unique values for that connection
-                            }
-                            if ((i_y + 1 == j_y || i_y - 1 == j_y) && i_x == j_x) { // y is nearby x the same
-                                map.put(i_x + j_x + i_y + j_y + i + j, 1);
+
+                            if (Math.abs(i_x - j_x) == 1  && i_y == j_y) { // x is +-1 y the same
+                                counter ++;
+                            }else if (Math.abs(i_y - j_y) == 1 && i_x == j_x) { // y is +-1 x the same
+                                counter ++;
                             }
                         }
                     }
                 }
             }
         }
-        return map.size();
+        return counter/2; //every connection is listed 2 times (a to b and b to a)
     }
 
     //craft the image
@@ -229,6 +231,7 @@ class Kette {
         int last_x = start_x;
         int last_y = start_y;
         //create all other nodes
+
         for (int i = 1; i < kette2d.size(); i++) { //starts at 1 bc first node is already created
 
             //calc current x/y in the image
