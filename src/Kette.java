@@ -213,7 +213,7 @@ class Kette {
     private void drawNodes(Graphics2D g2, int start_x, int start_y) {
 
         //Set color of the first node
-        setNodeColor(g2, 0);
+        chooseNodeColor(g2, 0);
 
         //create the initial node
         g2.fillRect(start_x, start_y, cellSize, cellSize);
@@ -230,7 +230,7 @@ class Kette {
             int current_x = start_x + (kette2d.get(i).getX() * cellSize * 2);
             int current_y = start_y + (kette2d.get(i).getY() * cellSize * 2);
 
-            setNodeColor(g2, i);
+            chooseNodeColor(g2, i);
 
             //draw yourself
             g2.fillRect(current_x, current_y, cellSize, cellSize);
@@ -281,7 +281,7 @@ class Kette {
         return new int[]{start_x, start_y};
     }
 
-    private void setNodeColor(Graphics2D g2, int index) {
+    private void chooseNodeColor(Graphics2D g2, int index) {
         if (kette2d.get(index).getValue() == 1) { //hydrophil
             g2.setColor(Color.BLACK);
         } else {
@@ -291,7 +291,7 @@ class Kette {
 
     private void drawIndex(Graphics2D g2, int index, int current_x, int current_y) {
 
-        setTextColor(g2, index);
+        chooseTextColor(g2, index);
 
         //create Text
         String label = Integer.toString(index);
@@ -325,7 +325,7 @@ class Kette {
         }
     }
 
-    private void setTextColor(Graphics2D g2, int index) {
+    private void chooseTextColor(Graphics2D g2, int index) {
         if (kette2d.get(index).getValue() == 1) { //hydrophil
             g2.setColor(Color.WHITE);
         } else {
