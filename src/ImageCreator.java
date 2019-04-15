@@ -7,11 +7,14 @@ import java.util.ArrayList;
 
 class ImageCreator {
 
-    static private int cellSize = 80;
+     private static int cellSize = 80;
+     private static ArrayList<Node> kette2d = new ArrayList<>();
 
-    static void createImage(ArrayList<Node> kette2d) {
+    static void createImage(ArrayList<Node> new_kette2d) {
+        
+        kette2d = new_kette2d;
 
-        int[] imageData = calcImageSize(kette2d);
+        int[] imageData = calcImageSize();
         int width = imageData[0];
         int height = imageData[1];
         int start_x = imageData[2];
@@ -27,7 +30,7 @@ class ImageCreator {
         g2.setColor(Color.GRAY);
         g2.fillRect(0, 0, width, height);
 
-        drawNodes(g2, kette2d, start_x, start_y); //each node also draws an index and a line
+        drawNodes(g2, start_x, start_y); //each node also draws an index and a line
 
         //create folder
         String folder = "/ga";
@@ -46,9 +49,9 @@ class ImageCreator {
         }
     }
 
-    private static int[] calcImageSize(ArrayList<Node> kette2d) {
+    private static int[] calcImageSize() {
 
-        int[] lowHighXY = calcLowHighCoords(kette2d);
+        int[] lowHighXY = calcLowHighCoords();
         int low_x = lowHighXY[0];
         int high_x = lowHighXY[1];
         int low_y = lowHighXY[2];
@@ -76,14 +79,14 @@ class ImageCreator {
         return new int[]{width, height, start_x, start_y};
     }
 
-    private static void drawNodes(Graphics2D g2, ArrayList<Node> kette2d, int start_x, int start_y) {
+    private static void drawNodes(Graphics2D g2, int start_x, int start_y) {
 
         //Set color of the first node
-        chooseNodeColor(g2, kette2d, 0);
+        chooseNodeColor(g2, 0);
 
         //create the initial node
         g2.fillRect(start_x, start_y, cellSize, cellSize);
-        drawIndex(g2, kette2d, 0, start_x, start_y);
+        drawIndex(g2, 0, start_x, start_y);
 
         //needed later to draw the lines between nodes
         int last_x = start_x;
@@ -96,12 +99,12 @@ class ImageCreator {
             int current_x = start_x + (kette2d.get(i).getX() * cellSize * 2);
             int current_y = start_y + (kette2d.get(i).getY() * cellSize * 2);
 
-            chooseNodeColor(g2, kette2d, i);
+            chooseNodeColor(g2, i);
 
             //draw yourself
             g2.fillRect(current_x, current_y, cellSize, cellSize);
 
-            drawIndex(g2, kette2d, i, current_x, current_y);
+            drawIndex(g2, i, current_x, current_y);
 
             drawLine(g2, current_x, current_y, last_x, last_y);
 
@@ -111,7 +114,7 @@ class ImageCreator {
         }
     }
 
-    private static int[] calcLowHighCoords(ArrayList<Node> kette2d) {//get the lowest and highest x/y coords
+    private static int[] calcLowHighCoords() {//get the lowest and highest x/y coords
 
         int low_x, high_x, low_y, high_y;
         low_x = high_x = low_y = high_y = 0;
@@ -147,7 +150,7 @@ class ImageCreator {
         return new int[]{start_x, start_y};
     }
 
-    private static void chooseNodeColor(Graphics2D g2, ArrayList<Node> kette2d, int index) {
+    private static void chooseNodeColor(Graphics2D g2, int index) {
         if (kette2d.get(index).getValue() == 1) { //hydrophil
             g2.setColor(Color.BLACK);
         } else {
@@ -155,9 +158,9 @@ class ImageCreator {
         }
     }
 
-    private static void drawIndex(Graphics2D g2, ArrayList<Node> kette2d, int index, int current_x, int current_y) {
+    private static void drawIndex(Graphics2D g2, int index, int current_x, int current_y) {
 
-        chooseTextColor(g2, kette2d, index);
+        chooseTextColor(g2, index);
 
         //create Text
         String label = Integer.toString(index);
@@ -191,7 +194,7 @@ class ImageCreator {
         }
     }
 
-    private static void chooseTextColor(Graphics2D g2, ArrayList<Node> kette2d, int index) {
+    private static void chooseTextColor(Graphics2D g2, int index) {
         if (kette2d.get(index).getValue() == 1) { //hydrophil
             g2.setColor(Color.WHITE);
         } else {
