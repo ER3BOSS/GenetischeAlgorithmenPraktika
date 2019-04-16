@@ -25,6 +25,11 @@ class Kette {
         kette2d = gen2d.generateRandomGraph(kette);
     }
 
+    void generateByInteligentRng(){
+        Random2DGenerator gen2d = new Random2DGenerator();
+        kette2d = gen2d.generateInteligentRandomGraph(kette);
+    }
+
     private int calcMinEnergie() {
         int counter = 0;
         for (int i = 0; i < kette2d.size(); i++) {

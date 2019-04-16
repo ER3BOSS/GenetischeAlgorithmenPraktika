@@ -49,6 +49,33 @@ class Random2DGenerator {
         return kette2d;
     }
 
+    ArrayList<Node> generateInteligentRandomGraph(String kette) {
+        //create first node at 0,0
+        int new_value = Character.getNumericValue(kette.charAt(0));
+        kette2d.add(new Node(0, 0, new_value));
+
+        int[] nextPos;
+
+        for (int i = 1; i < kette.length(); i++) {
+
+            int counter = 0;
+
+            do {
+                nextPos = generateRandomPos();
+                if (counter >= 30) { //activates check after 30 consecutive fails
+                    if (checkSurroundings()) {
+                        break;
+                    }
+                }
+                counter++;
+
+            } while (coordinateUnavailable(nextPos[0], nextPos[1]));
+
+            kette2d.add(new Node(nextPos[0], nextPos[1], Character.getNumericValue(kette.charAt(i))));
+        }
+        return kette2d;
+    }
+
     private int[] generateRandomPos() {
         // retrieve current pos
         int current_x = kette2d.get(kette2d.size() - 1).getX();

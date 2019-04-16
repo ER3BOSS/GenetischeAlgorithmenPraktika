@@ -10,7 +10,7 @@ class Main {
 
         for (int i = 0; i < 100000; i++){
             individualsList.add(new Kette("11010101011110100010001000010001000101111010101011"));
-            individualsList.get(i).generateByRng();
+            individualsList.get(i).generateByInteligentRng();
 
             individualsList.get(i).printValues();
             double debugVar = individualsList.get(i).calcFitness();
