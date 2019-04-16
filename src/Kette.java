@@ -71,9 +71,10 @@ class Kette {
     double calcFitness (){
         double countOfPairs = calcMinEnergie();
         double countOfOverlap = calcOverlap();
+
         System.out.println("Minimale Energie: " + calcMinEnergie());
         System.out.println("Overlap: " + countOfOverlap);
-        return ((1 + countOfPairs) / ((1 + countOfOverlap) * 10));
+        return ((1 + countOfPairs) / ((1 + countOfOverlap) * 100));
     }
 
 }
