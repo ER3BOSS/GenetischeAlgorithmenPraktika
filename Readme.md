@@ -1,6 +1,6 @@
-###Praktikum genetische Algorithmen
+### Praktikum genetische Algorithmen
 
-##Fitness Function
+## Fitness Function
 - nicht 0
 - i.d.r positiv
 - double
@@ -13,14 +13,14 @@
 - Anzeige des besten Kanidatens am Ende
 - Log-Datei für jede Generation -> für Exel (Deutsches Zahlenformat)
 
-##3. Termin
+## 3. Termin
 - Ziel: einfacher genetischer Algorithmus
 
-##4. Termin
+## 4. Termin
 - Auswahl eines anderen Selectionsverahrens
 - Dynamische steuerung der Mutationsrate
 
-##5. Termin
+## 5. Termin
 - Algorithmus mit größerem Benchmark
 -> Verhalten des Algorithmus
 -> Abfrage des Quellcodes
