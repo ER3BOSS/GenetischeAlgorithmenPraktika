@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 class Kette {
     //Vars
@@ -15,12 +14,16 @@ class Kette {
         return kette2d;
     }
 
-    void generateByRNG() {
+    void generateByRngNoOverlap() {
         while (kette2d.size() == 0) // 0 means returned graph is invalid
-            kette2d = Random2DGenerator.generateRandomGraph(kette);
+            kette2d = Random2DGenerator.generateRandomGraphNoOverlap(kette);
     }
 
-    int calcMinEnergie() {
+    void generateByRng(){
+        kette2d = Random2DGenerator.generateRandomGraph(kette);
+    }
+
+    private int calcMinEnergie() {
         int counter = 0;
         for (int i = 0; i < kette2d.size(); i++) {
             if (kette2d.get(i).getValue() == 1) {
@@ -45,6 +48,32 @@ class Kette {
             }
         }
         return counter / 2; //every connection is listed 2 times (a to b and b to a)
+    }
+
+    private int calcOverlap(){
+        int counter = 0;
+        for (Node nodeA : kette2d){
+            int a_x = nodeA.getX();
+            int a_y = nodeA.getY();
+
+            for (Node nodeB : kette2d){
+                int b_x = nodeB.getX();
+                int b_y = nodeB.getY();
+
+                if (a_x == b_x && a_y == b_y && nodeA != nodeB){
+                    counter ++;
+                }
+            }
+        }
+        return counter / 2;
+    }
+
+    double calcFitness (){
+        double countOfPairs = calcMinEnergie();
+        double countOfOverlap = calcOverlap();
+        System.out.println("Minimale Energie: " + calcMinEnergie());
+        System.out.println("Overlap: " + countOfOverlap);
+        return ((1 + countOfPairs) / ((1 + countOfOverlap) * 10));
     }
 
 }
