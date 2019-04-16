@@ -89,7 +89,7 @@ class Kette {
     double calcFitness (){
         double countOfPairs = calcMinEnergie();
         double countOfOverlap = calcOverlap();
-        return ((1 + countOfPairs) / ((1 + countOfOverlap) * 100));
+        return ((1 + countOfPairs) / ((1 + countOfOverlap) * 1000));
     }
 
     void printValues(){

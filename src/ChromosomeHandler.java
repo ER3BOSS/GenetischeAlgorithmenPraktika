@@ -58,9 +58,10 @@ public class ChromosomeHandler {
 
     static ArrayList<Integer> crossoverChromosome(ArrayList<Integer> chromosomeA, ArrayList<Integer> chromosomeB){
         ArrayList<Integer> crossover = new ArrayList<>();
-
+        double random = Math.random();
+        random = Math.ceil(chromosomeA.size()*random);
         for (int i = 0; i < chromosomeA.size(); i++){
-            if (i < chromosomeA.size()/2){
+            if (i < random){
                 crossover.add(chromosomeA.get(i));
             }else{
                 crossover.add(chromosomeB.get(i));
@@ -74,7 +75,7 @@ public class ChromosomeHandler {
         for (int i = 0; i < chromosome.size(); i++) {
             double random = Math.random();
             if (random <= mutationRate){
-                if (random < .50){
+                if (random < mutationRate/2){
                     int mutated = (chromosome.get(i) - 1) % 4;
                     if (mutated == -1){ //for some reason -1 is possible with % in java
                         mutated = 3;

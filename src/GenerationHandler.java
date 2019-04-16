@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -33,35 +34,57 @@ public class GenerationHandler {
 
             //sort the list so the best individuals are on top (0 and 1)
             individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
-            individuals.subList(2, individuals.size()).clear(); // kill all but the 2 best
+            individuals.subList(5, individuals.size()).clear(); // kill all but the 2 best
+            killDublicates();
 
-            makeSomeBabys();
+            if (generation != maxGenerations -1) {
+                makeSomeBabys();
+                makeSomeMutants(generation);
+                makeSomeNewBlood(generation);
+            }
 
-            makeSomeMutants(generation);
+            printAverageFitness(generation);
 
-            makeSomeNewBlood(generation);
 
-            printAverageFitness(generation); //
+
         }
 
     }
 
+    //todo: this seems not to work
+    private void killDublicates(){
+        for(int individualA = 1; individualA < individuals.size(); individualA++){
+            for (int individualB = 1; individualB < individuals.size(); individualB++){
+                if (individualA != individualB){
+                    if(individuals.get(individualA).equals(individuals.get(individualB))){
+                        individuals.remove(individualB);
+                    }
+                }
+            }
+        }
+    }
+
     private void makeSomeBabys(){ //Todo refactor!!!
         //create 2 offspring's
-        ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(0).getKette2d());
-        ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(1).getKette2d());
+        int index;
+        for (int i = 0; i < 5; i++){
+            index = new Random().nextInt(individuals.size());
+            ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(index).getKette2d());
+            index = new Random().nextInt(individuals.size());
+            ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(index).getKette2d());
 
-        ArrayList<Integer> childA = ChromosomeHandler.crossoverChromosome(chromosomeA,chromosomeB);
-        ArrayList<Integer> childB = ChromosomeHandler.crossoverChromosome(chromosomeB,chromosomeA);
+            ArrayList<Integer> childA = ChromosomeHandler.crossoverChromosome(chromosomeA,chromosomeB);
+            ArrayList<Integer> childB = ChromosomeHandler.crossoverChromosome(chromosomeB,chromosomeA);
 
-        individuals.add(ChromosomeHandler.convertChromosome2NewGraph(childA, sequence));
-        individuals.add(ChromosomeHandler.convertChromosome2NewGraph(childB, sequence));
+            individuals.add(ChromosomeHandler.convertChromosome2NewGraph(childA, sequence));
+            individuals.add(ChromosomeHandler.convertChromosome2NewGraph(childB, sequence));
+        }
     }
 
     private void makeSomeMutants(int generation){
         int initialPop = individuals.size();
         // fill the generationSize while leaving space for newBlood also no need to do that in the last gen
-        while (individuals.size() < generationSize - newBloodAmount && generation != maxGenerations -1 ){
+        while (individuals.size() < generationSize - newBloodAmount){
             int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
             ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getKette2d());
             ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant);
@@ -70,9 +93,9 @@ public class GenerationHandler {
     }
 
     private void makeSomeNewBlood(int generation){
-        while (individuals.size() < generationSize && generation != maxGenerations -1 ){
+        while (individuals.size() < generationSize){
             individuals.add(new Kette(sequence));
-            individuals.get(individuals.size()-1).generateByIntelligentRng();
+            individuals.get(individuals.size()-1).generateByRng();
         }
     }
 
