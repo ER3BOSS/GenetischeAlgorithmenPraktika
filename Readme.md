@@ -4,6 +4,7 @@
 - nicht 0
 - i.d.r positiv
 - double
+
 -> Faltung bewerten: hydophob Paare, die nicht in der Sequenz benachbart sind; jede Überlappung -> schlecht;
 => Formel für den Fitnesswert
 = ((1 + HYDOPHOB_PAARE) * 1) / ((1 + UEBERLAPPUNG) * 10)
