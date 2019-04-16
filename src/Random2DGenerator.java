@@ -3,11 +3,10 @@ import java.util.Random;
 
 class Random2DGenerator {
 
-    private static ArrayList<Node> kette2d = new ArrayList<>();
+    private ArrayList<Node> kette2d = new ArrayList<>();
 
 
-    static ArrayList<Node> generateRandomGraphNoOverlap(String kette) {
-
+    ArrayList<Node> generateRandomGraphNoOverlap(String kette) {
         //create first node at 0,0
         int new_value = Character.getNumericValue(kette.charAt(0));
         kette2d.add(new Node(0, 0, new_value));
@@ -36,8 +35,7 @@ class Random2DGenerator {
         return kette2d;
     }
 
-    static ArrayList<Node> generateRandomGraph(String kette) {
-
+    ArrayList<Node> generateRandomGraph(String kette) {
         //create first node at 0,0
         int new_value = Character.getNumericValue(kette.charAt(0));
         kette2d.add(new Node(0, 0, new_value));
@@ -51,7 +49,7 @@ class Random2DGenerator {
         return kette2d;
     }
 
-    private static int[] generateRandomPos() {
+    private int[] generateRandomPos() {
         // retrieve current pos
         int current_x = kette2d.get(kette2d.size() - 1).getX();
         int current_y = kette2d.get(kette2d.size() - 1).getY();
@@ -83,7 +81,7 @@ class Random2DGenerator {
         return new int[]{next_x, next_y};
     }
 
-    private static boolean checkSurroundings() { //checks if all possible directions are unavailable
+    private boolean checkSurroundings() { //checks if all possible directions are unavailable
 
         int current_x = kette2d.get(kette2d.size() - 1).getX();
         int current_y = kette2d.get(kette2d.size() - 1).getY();
@@ -106,7 +104,7 @@ class Random2DGenerator {
         return blocked == 4;
     }
 
-    private static boolean coordinateUnavailable(int x, int y) {//checks if a given coordinate is free
+    private boolean coordinateUnavailable(int x, int y) {//checks if a given coordinate is free
         for (Node node : kette2d) {
             if (node.getX() == x && node.getY() == y) {
                 return true;

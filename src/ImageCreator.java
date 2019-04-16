@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 class ImageCreator {
 
-     private static int cellSize = 80;
-     private static ArrayList<Node> kette2d = new ArrayList<>();
+     private int cellSize = 80;
+     private ArrayList<Node> kette2d = new ArrayList<>();
 
-    static void createImage(ArrayList<Node> new_kette2d) {
+    void createImage(ArrayList<Node> new_kette2d) {
         
         kette2d = new_kette2d;
 
@@ -49,7 +49,7 @@ class ImageCreator {
         }
     }
 
-    private static int[] calcImageSize() {
+    private int[] calcImageSize() {
 
         int[] lowHighXY = calcLowHighCoords();
         int low_x = lowHighXY[0];
@@ -79,7 +79,7 @@ class ImageCreator {
         return new int[]{width, height, start_x, start_y};
     }
 
-    private static void drawNodes(Graphics2D g2, int start_x, int start_y) {
+    private void drawNodes(Graphics2D g2, int start_x, int start_y) {
 
         //Set color of the first node
         chooseNodeColor(g2, 0);
@@ -114,7 +114,7 @@ class ImageCreator {
         }
     }
 
-    private static int[] calcLowHighCoords() {//get the lowest and highest x/y coords
+    private int[] calcLowHighCoords() {//get the lowest and highest x/y coords
 
         int low_x, high_x, low_y, high_y;
         low_x = high_x = low_y = high_y = 0;
@@ -142,7 +142,7 @@ class ImageCreator {
         return new int[]{low_x, high_x, low_y, high_y};
     }
 
-    private static int[] calcStartPos(int low_x, int low_y) {//calculates the position of the first node
+    private int[] calcStartPos(int low_x, int low_y) {//calculates the position of the first node
 
         int start_x = 2 * -low_x * cellSize + cellSize; //start_x
         int start_y = 2 * -low_y * cellSize + cellSize; //start_y
@@ -150,7 +150,7 @@ class ImageCreator {
         return new int[]{start_x, start_y};
     }
 
-    private static void chooseNodeColor(Graphics2D g2, int index) {
+    private void chooseNodeColor(Graphics2D g2, int index) {
         if (kette2d.get(index).getValue() == 1) { //hydrophil
             g2.setColor(Color.BLACK);
         } else {
@@ -158,7 +158,7 @@ class ImageCreator {
         }
     }
 
-    private static void drawIndex(Graphics2D g2, int index, int current_x, int current_y) {
+    private void drawIndex(Graphics2D g2, int index, int current_x, int current_y) {
 
         chooseTextColor(g2, index);
 
@@ -175,7 +175,7 @@ class ImageCreator {
         g2.drawString(label, current_x + cellSize / 2 - labelWidth / 2, current_y + cellSize / 2 + offset);
     }
 
-    private static void drawLine(Graphics2D g2, int current_x, int current_y, int last_x, int last_y) {
+    private void drawLine(Graphics2D g2, int current_x, int current_y, int last_x, int last_y) {
         //draw line
         g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(5));
@@ -194,7 +194,7 @@ class ImageCreator {
         }
     }
 
-    private static void chooseTextColor(Graphics2D g2, int index) {
+    private void chooseTextColor(Graphics2D g2, int index) {
         if (kette2d.get(index).getValue() == 1) { //hydrophil
             g2.setColor(Color.WHITE);
         } else {

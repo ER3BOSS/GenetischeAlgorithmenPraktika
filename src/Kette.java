@@ -15,12 +15,14 @@ class Kette {
     }
 
     void generateByRngNoOverlap() {
+        Random2DGenerator gen2d = new Random2DGenerator();
         while (kette2d.size() == 0) // 0 means returned graph is invalid
-            kette2d = Random2DGenerator.generateRandomGraphNoOverlap(kette);
+            kette2d = gen2d.generateRandomGraphNoOverlap(kette);
     }
 
     void generateByRng(){
-        kette2d = Random2DGenerator.generateRandomGraph(kette);
+        Random2DGenerator gen2d = new Random2DGenerator();
+        kette2d = gen2d.generateRandomGraph(kette);
     }
 
     private int calcMinEnergie() {
@@ -71,10 +73,14 @@ class Kette {
     double calcFitness (){
         double countOfPairs = calcMinEnergie();
         double countOfOverlap = calcOverlap();
-
-        System.out.println("Minimale Energie: " + calcMinEnergie());
-        System.out.println("Overlap: " + countOfOverlap);
         return ((1 + countOfPairs) / ((1 + countOfOverlap) * 100));
+    }
+
+    void printValues(){
+        System.out.println();
+        System.out.println("Minimale Energie: " + calcMinEnergie());
+        System.out.println("Overlap: " + calcOverlap());
+        System.out.println("Fitness: " + calcFitness());
     }
 
 }
