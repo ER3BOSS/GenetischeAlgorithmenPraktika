@@ -8,16 +8,16 @@ class Main {
 
         ArrayList<Kette> individualsList = new ArrayList<>();
 
-        for (int i = 0; i < 100000; i++){
-            individualsList.add(new Kette("11010101011110100010001000010001000101111010101011"));
-            individualsList.get(i).generateByInteligentRng();
+        for (int i = 0; i < 1000000; i++){
+            Kette kette = new Kette("11010101011110100010001000010001000101111010101011");
+            kette.generateByInteligentRng();
 
-            individualsList.get(i).printValues();
-            double debugVar = individualsList.get(i).calcFitness();
+            kette.printValues();
+            double debugVar = kette.calcFitness();
 
             if (debugVar > curretBestFitness){
-                bestKette = individualsList.get(i);
-                curretBestFitness = individualsList.get(i).calcFitness();
+                bestKette = kette;
+                curretBestFitness = kette.calcFitness();
             }
 
         }
