@@ -10,7 +10,7 @@ class ImageCreator {
      private int cellSize = 80;
      private ArrayList<Node> kette2d = new ArrayList<>();
 
-    void createImage(ArrayList<Node> new_kette2d) {
+    void createImage(ArrayList<Node> new_kette2d, String filename) {
         
         kette2d = new_kette2d;
 
@@ -40,7 +40,6 @@ class ImageCreator {
         }
 
         //create image
-        String filename = "Kette.png";
         try {
             ImageIO.write(image, "png", new File(folder + File.separator + filename));
         } catch (IOException e) {
