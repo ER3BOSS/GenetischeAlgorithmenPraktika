@@ -4,30 +4,41 @@ class Kette {
     //Vars
     private String kette;
     private ArrayList<Node> kette2d = new ArrayList<>();
+    private Random2DGenerator random2DGenerator = new Random2DGenerator();
 
     //Constructor
     Kette(String new_string) {
         kette = new_string;
     }
 
+    Kette(String new_string, ArrayList<Node> kette2d, ArrayList<Integer> chromosome) {
+        kette = new_string;
+        this.kette2d = kette2d;
+        forceChromosome(chromosome);
+    }
+
+    private void forceChromosome(ArrayList<Integer> chromosome){
+        for (int gene = 0; gene < chromosome.size(); gene ++){
+            kette2d.get(gene).setGene(chromosome.get(gene));
+        }
+    }
+
+
     ArrayList<Node> getKette2d() {
         return kette2d;
     }
 
     void generateByRngNoOverlap() {
-        Random2DGenerator gen2d = new Random2DGenerator();
         while (kette2d.size() == 0) // 0 means returned graph is invalid
-            kette2d = gen2d.generateRandomGraphNoOverlap(kette);
+            kette2d = random2DGenerator.generateRandomGraphNoOverlap(kette);
     }
 
     void generateByRng(){
-        Random2DGenerator gen2d = new Random2DGenerator();
-        kette2d = gen2d.generateRandomGraph(kette);
+        kette2d = random2DGenerator.generateRandomGraph(kette);
     }
 
-    void generateByInteligentRng(){
-        Random2DGenerator gen2d = new Random2DGenerator();
-        kette2d = gen2d.generateInteligentRandomGraph(kette);
+    void generateByIntelligentRng(){
+        kette2d = random2DGenerator.generateIntelligentRandomGraph(kette);
     }
 
     private int calcMinEnergie() {
