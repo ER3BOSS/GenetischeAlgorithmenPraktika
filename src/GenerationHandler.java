@@ -68,31 +68,25 @@ public class GenerationHandler {
 
     private void makeSomeBabys(){ //Todo refactor!!!
         //create 2 offspring's
-        int index;
-        for (int i = 0; i < 5; i++){
-            index = new Random().nextInt(individuals.size());
-            ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(index).getKette2d());
-            index = new Random().nextInt(individuals.size());
-            ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(index).getKette2d());
+        ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(0).getPhenotype());
+        ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(1).getPhenotype());
 
-            ArrayList<Integer> childA = ChromosomeHandler.crossoverChromosome(chromosomeA,chromosomeB);
-            ArrayList<Integer> childB = ChromosomeHandler.crossoverChromosome(chromosomeB,chromosomeA);
+        ArrayList<Integer> childA = ChromosomeHandler.crossoverChromosome(chromosomeA,chromosomeB);
+        ArrayList<Integer> childB = ChromosomeHandler.crossoverChromosome(chromosomeB,chromosomeA);
 
-            individuals.add(ChromosomeHandler.convertChromosome2NewGraph(childA, sequence));
-            individuals.add(ChromosomeHandler.convertChromosome2NewGraph(childB, sequence));
-        }
+        individuals.add(ChromosomeHandler.chromosome2phenotype(childA, sequence));
+        individuals.add(ChromosomeHandler.chromosome2phenotype(childB, sequence));
     }
 
     private void makeSomeMutants(int generation){
         int initialPop = individuals.size();
         // fill the generationSize while leaving space for newBlood also no need to do that in the last gen
-        while (individuals.size() < generationSize - newBloodAmount){
+        while (individuals.size() < generationSize - newBloodAmount && generation != maxGenerations -1 ){
             int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
-            ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getKette2d());
-            ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant, 0.1);
-            individuals.add(ChromosomeHandler.convertChromosome2NewGraph(mutant, sequence));
+            ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getPhenotype());
+            ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant);
+            individuals.add(ChromosomeHandler.chromosome2phenotype(mutant, sequence));
         }
-        System.out.println(0.5*generation);
     }
 
     private void makeSomeNewBlood(int generation){
@@ -114,7 +108,7 @@ public class GenerationHandler {
 
     void printResult() { //todo: move image creation somewhere else
         for (int i = 0; i < individuals.size(); i++){
-            imageCreator.createImage(individuals.get(i).getKette2d(), Integer.toString(i)+ ".png");
+            imageCreator.createImage(individuals.get(i).getPhenotype(), Integer.toString(i)+ ".png");
             System.out.println();
             individuals.get(i).printValues();
         }

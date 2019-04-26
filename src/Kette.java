@@ -3,7 +3,7 @@ import java.util.ArrayList;
 class Kette {
     //Vars
     private String kette;
-    private ArrayList<Node> kette2d = new ArrayList<>();
+    private ArrayList<Node> phenotype = new ArrayList<>();
     private Random2DGenerator random2DGenerator = new Random2DGenerator();
     //Todo: Implement the Chromosome here (that way it there is no need to calculate it every time)
 
@@ -12,50 +12,42 @@ class Kette {
         kette = new_string;
     }
 
-    Kette(String new_string, ArrayList<Node> kette2d, ArrayList<Integer> chromosome) {
+    Kette(String new_string, ArrayList<Node> phenotype) {
         kette = new_string;
-        this.kette2d = kette2d;
-        forceChromosome(chromosome);
+        this.phenotype = phenotype;
     }
 
-    private void forceChromosome(ArrayList<Integer> chromosome){
-        for (int gene = 0; gene < chromosome.size(); gene ++){
-            kette2d.get(gene).setGene(chromosome.get(gene));
-        }
-    }
-
-
-    ArrayList<Node> getKette2d() {
-        return kette2d;
+    ArrayList<Node> getPhenotype() {
+        return phenotype;
     }
 
     void generateByRngNoOverlap() {
-        while (kette2d.size() == 0) // 0 means returned graph is invalid
-            kette2d = random2DGenerator.generateRandomGraphNoOverlap(kette);
+        while (phenotype.size() == 0) // 0 means returned graph is invalid
+            phenotype = random2DGenerator.generateRandomGraphNoOverlap(kette);
     }
 
     void generateByRng(){
-        kette2d = random2DGenerator.generateRandomGraph(kette);
+        phenotype = random2DGenerator.generateRandomGraph(kette);
     }
 
     void generateByIntelligentRng(){
-        kette2d = random2DGenerator.generateIntelligentRandomGraph(kette);
+        phenotype = random2DGenerator.generateIntelligentRandomGraph(kette);
     }
 
     private int calcMinEnergie() {
         int counter = 0;
-        for (int i = 0; i < kette2d.size(); i++) {
-            if (kette2d.get(i).getValue() == 1) {
+        for (int i = 0; i < phenotype.size(); i++) {
+            if (phenotype.get(i).getValue() == 1) {
 
-                int i_x = kette2d.get(i).getX();
-                int i_y = kette2d.get(i).getY();
+                int i_x = phenotype.get(i).getX();
+                int i_y = phenotype.get(i).getY();
 
-                for (int j = 0; j < kette2d.size(); j++) {
+                for (int j = 0; j < phenotype.size(); j++) {
 
-                    if (Math.abs(i - j) > 1 && kette2d.get(j).getValue() == 1) { //not the same and both 1
+                    if (Math.abs(i - j) > 1 && phenotype.get(j).getValue() == 1) { //not the same and both 1
 
-                        int j_x = kette2d.get(j).getX();
-                        int j_y = kette2d.get(j).getY();
+                        int j_x = phenotype.get(j).getX();
+                        int j_y = phenotype.get(j).getY();
 
                         if (Math.abs(i_x - j_x) == 1 && i_y == j_y) { // x is +-1 y the same
                             counter++;
@@ -71,11 +63,11 @@ class Kette {
 
     private int calcOverlap(){
         int counter = 0;
-        for (Node nodeA : kette2d){
+        for (Node nodeA : phenotype){
             int a_x = nodeA.getX();
             int a_y = nodeA.getY();
 
-            for (Node nodeB : kette2d){
+            for (Node nodeB : phenotype){
                 int b_x = nodeB.getX();
                 int b_y = nodeB.getY();
 
