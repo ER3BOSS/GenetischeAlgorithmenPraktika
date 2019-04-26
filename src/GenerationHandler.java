@@ -54,8 +54,8 @@ public class GenerationHandler {
         ArrayList<Integer> childA = ChromosomeHandler.crossoverChromosome(chromosomeA,chromosomeB);
         ArrayList<Integer> childB = ChromosomeHandler.crossoverChromosome(chromosomeB,chromosomeA);
 
-        individuals.add(ChromosomeHandler.convertChromosome2NewGraph(childA, sequence));
-        individuals.add(ChromosomeHandler.convertChromosome2NewGraph(childB, sequence));
+        individuals.add(ChromosomeHandler.chromosome2phenotype(childA, sequence));
+        individuals.add(ChromosomeHandler.chromosome2phenotype(childB, sequence));
     }
 
     private void makeSomeMutants(int generation){
@@ -65,7 +65,7 @@ public class GenerationHandler {
             int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
             ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getPhenotype());
             ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant);
-            individuals.add(ChromosomeHandler.convertChromosome2NewGraph(mutant, sequence));
+            individuals.add(ChromosomeHandler.chromosome2phenotype(mutant, sequence));
         }
     }
 

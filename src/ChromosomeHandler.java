@@ -5,7 +5,7 @@ public class ChromosomeHandler {
     public ChromosomeHandler() {
     }
 
-    static Kette convertChromosome2NewGraph(ArrayList<Integer> chromosome, String sequence){
+    static Kette chromosome2phenotype(ArrayList<Integer> chromosome, String sequence){
         int x = 0;
         int y = 0;
         ArrayList<Node> phenotype = new ArrayList<>();
