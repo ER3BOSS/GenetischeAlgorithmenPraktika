@@ -84,7 +84,7 @@ public class GenerationHandler {
         while (individuals.size() < generationSize - newBloodAmount && generation != maxGenerations -1 ){
             int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
             ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getPhenotype());
-            ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant);
+            ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant, 0.1);
             individuals.add(ChromosomeHandler.chromosome2phenotype(mutant, sequence));
         }
     }
