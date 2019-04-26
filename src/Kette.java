@@ -5,6 +5,7 @@ class Kette {
     private String kette;
     private ArrayList<Node> kette2d = new ArrayList<>();
     private Random2DGenerator random2DGenerator = new Random2DGenerator();
+    //Todo: Implement the Chromosome here (that way it there is no need to calculate it every time)
 
     //Constructor
     Kette(String new_string) {
@@ -89,7 +90,7 @@ class Kette {
     double calcFitness (){
         double countOfPairs = calcMinEnergie();
         double countOfOverlap = calcOverlap();
-        return ((1 + countOfPairs) / ((1 + countOfOverlap) * 1000));
+        return ((1 + countOfPairs) / ((1 + countOfOverlap*4) * 10));
     }
 
     void printValues(){

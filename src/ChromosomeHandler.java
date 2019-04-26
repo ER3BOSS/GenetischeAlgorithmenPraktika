@@ -2,9 +2,7 @@ import java.util.ArrayList;
 
 public class ChromosomeHandler {
 
-    static private double mutationRate = 0.05;
-
-    public ChromosomeHandler() {
+        public ChromosomeHandler() {
     }
 
     static Kette convertChromosome2NewGraph(ArrayList<Integer> chromosome, String sequence){
@@ -71,7 +69,7 @@ public class ChromosomeHandler {
         return crossover;
     }
 
-    static ArrayList<Integer> mutateChromosome(ArrayList<Integer> chromosome){
+    static ArrayList<Integer> mutateChromosome(ArrayList<Integer> chromosome, double mutationRate){
         for (int i = 0; i < chromosome.size(); i++) {
             double random = Math.random();
             if (random <= mutationRate){

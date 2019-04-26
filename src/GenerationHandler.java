@@ -1,4 +1,8 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -45,10 +49,8 @@ public class GenerationHandler {
 
             printAverageFitness(generation);
 
-
-
+            printLogTxt();
         }
-
     }
 
     //todo: this seems not to work
@@ -56,7 +58,7 @@ public class GenerationHandler {
         for(int individualA = 1; individualA < individuals.size(); individualA++){
             for (int individualB = 1; individualB < individuals.size(); individualB++){
                 if (individualA != individualB){
-                    if(individuals.get(individualA).equals(individuals.get(individualB))){
+                    if(Objects.hashCode(individualA) == Objects.hashCode(individualB)){
                         individuals.remove(individualB);
                     }
                 }
@@ -87,9 +89,10 @@ public class GenerationHandler {
         while (individuals.size() < generationSize - newBloodAmount){
             int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
             ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getKette2d());
-            ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant);
+            ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant, 0.1);
             individuals.add(ChromosomeHandler.convertChromosome2NewGraph(mutant, sequence));
         }
+        System.out.println(0.5*generation);
     }
 
     private void makeSomeNewBlood(int generation){
@@ -114,6 +117,23 @@ public class GenerationHandler {
             imageCreator.createImage(individuals.get(i).getKette2d(), Integer.toString(i)+ ".png");
             System.out.println();
             individuals.get(i).printValues();
+        }
+    }
+
+    void printLogTxt(){
+        //create folder
+        String folder = "/ga";
+        if (!new File(folder).exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            new File(folder).mkdirs();
+        }
+        try (PrintWriter out = new PrintWriter(new FileWriter(new File("/ga" + File.separator +"Log.txt"),true))) {
+            for(Kette kette: individuals){
+                out.print(kette.calcFitness() + ",");
+            }
+            out.print("\n");
+        }catch (java.io.IOException e){
+            System.out.println("Log file not found");
         }
     }
 
