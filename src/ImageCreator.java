@@ -8,11 +8,11 @@ import java.util.ArrayList;
 class ImageCreator {
 
      private int cellSize = 80;
-     private ArrayList<Node> kette2d = new ArrayList<>();
+     private ArrayList<Node> phenotype = new ArrayList<>();
 
-    void createImage(ArrayList<Node> new_kette2d, String filename) {
+    void createImage(ArrayList<Node> phenotype, String filename) {
         
-        kette2d = new_kette2d;
+        this.phenotype = phenotype;
 
         int[] imageData = calcImageSize();
         int width = imageData[0];
@@ -92,11 +92,11 @@ class ImageCreator {
         int last_y = start_y;
         //create all other nodes
 
-        for (int i = 1; i < kette2d.size(); i++) { //starts at 1 bc first node is already created
+        for (int i = 1; i < phenotype.size(); i++) { //starts at 1 bc first node is already created
 
             //calc current x/y in the image
-            int current_x = start_x + (kette2d.get(i).getX() * cellSize * 2);
-            int current_y = start_y + (kette2d.get(i).getY() * cellSize * 2);
+            int current_x = start_x + (phenotype.get(i).getX() * cellSize * 2);
+            int current_y = start_y + (phenotype.get(i).getY() * cellSize * 2);
 
             chooseNodeColor(g2, i);
 
@@ -118,7 +118,7 @@ class ImageCreator {
         int low_x, high_x, low_y, high_y;
         low_x = high_x = low_y = high_y = 0;
 
-        for (Node node : kette2d) {
+        for (Node node : phenotype) {
 
             //get x and y from current node
             int x = node.getX();
@@ -150,7 +150,7 @@ class ImageCreator {
     }
 
     private void chooseNodeColor(Graphics2D g2, int index) {
-        if (kette2d.get(index).getValue() == 1) { //hydrophil
+        if (phenotype.get(index).getValue() == 1) { //hydrophil
             g2.setColor(Color.BLACK);
         } else {
             g2.setColor(Color.WHITE); //hydrophob
@@ -194,7 +194,7 @@ class ImageCreator {
     }
 
     private void chooseTextColor(Graphics2D g2, int index) {
-        if (kette2d.get(index).getValue() == 1) { //hydrophil
+        if (phenotype.get(index).getValue() == 1) { //hydrophil
             g2.setColor(Color.WHITE);
         } else {
             g2.setColor(Color.BLACK); //hydrophob

@@ -48,8 +48,8 @@ public class GenerationHandler {
 
     private void makeSomeBabys(){ //Todo refactor!!!
         //create 2 offspring's
-        ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(0).getKette2d());
-        ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(1).getKette2d());
+        ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(0).getPhenotype());
+        ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(1).getPhenotype());
 
         ArrayList<Integer> childA = ChromosomeHandler.crossoverChromosome(chromosomeA,chromosomeB);
         ArrayList<Integer> childB = ChromosomeHandler.crossoverChromosome(chromosomeB,chromosomeA);
@@ -63,7 +63,7 @@ public class GenerationHandler {
         // fill the generationSize while leaving space for newBlood also no need to do that in the last gen
         while (individuals.size() < generationSize - newBloodAmount && generation != maxGenerations -1 ){
             int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
-            ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getKette2d());
+            ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getPhenotype());
             ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant);
             individuals.add(ChromosomeHandler.convertChromosome2NewGraph(mutant, sequence));
         }
@@ -88,7 +88,7 @@ public class GenerationHandler {
 
     void printResult() { //todo: move image creation somewhere else
         for (int i = 0; i < individuals.size(); i++){
-            imageCreator.createImage(individuals.get(i).getKette2d(), Integer.toString(i)+ ".png");
+            imageCreator.createImage(individuals.get(i).getPhenotype(), Integer.toString(i)+ ".png");
             System.out.println();
             individuals.get(i).printValues();
         }
