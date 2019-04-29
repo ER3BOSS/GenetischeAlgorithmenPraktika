@@ -1,4 +1,5 @@
 import java.util.NavigableMap;
+import java.util.Objects;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -25,7 +26,13 @@ public class RandomCollection<E> {
     }
 
     public E next() {
-        double value = random.nextDouble() * total;
+        double value;
+        int count = 0;
+        do {
+            value = random.nextDouble() * total;
+            count ++;
+        } while (map.higherEntry(value) == null);
+        //return map.remove(map.higherEntry(value).getKey());
         return map.higherEntry(value).getValue();
     }
 }
