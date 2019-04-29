@@ -11,11 +11,14 @@ class Kette {
     //Constructor
     Kette(String new_string) {
         kette = new_string;
+        //could generate phenotype here
+        //calc fitness
     }
 
     Kette(String new_string, ArrayList<Node> phenotype) {
         kette = new_string;
         this.phenotype = phenotype;
+        //calc fitness
     }
 
     ArrayList<Node> getPhenotype() {

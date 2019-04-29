@@ -10,7 +10,7 @@ public class GenerationHandler {
     private String sequence;
     private ArrayList<Kette> individuals = new ArrayList<>();
     private ImageCreator imageCreator = new ImageCreator();
-    RandomCollection<Kette> randomCollection = new RandomCollection<>();
+    private RandomCollection<Kette> randomCollection = new RandomCollection<>();
     private int maxGenerations = 0;
     private int generationSize = 0;
     private int newBloodAmount = 0;
@@ -35,18 +35,15 @@ public class GenerationHandler {
 
         for (int generation = 0; generation < maxGenerations; generation++){
 
-            //sort the list so the best individuals are on top (0 and 1)
-
             selectLuckyFew(generationSize/2);
-
-            individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
+            //individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
 
             if (generation != maxGenerations -1) { // if not the last generation
                 //makeSomeBabys();
                 makeSomeMutants(generation);
                 //makeSomeNewBlood(generation);
-            }else{
-                individuals.subList(5, individuals.size()).clear(); // kill all but the 2 best
+            }else{ //if its the last generation
+                //individuals.subList(5, individuals.size()).clear(); // kill all but the x best
             }
             printLogTxt();
         }
@@ -111,15 +108,16 @@ public class GenerationHandler {
         return avr;
     }
 
-    void printResult() { //todo: move image creation somewhere else
-        for (int i = 0; i < individuals.size(); i++){
+    void drawResult(int top) { // top defines the best x you want the image of
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
+        for (int i = 0; i < top; i++){
             imageCreator.createImage(individuals.get(i).getPhenotype(), Integer.toString(i)+ ".png");
             System.out.println();
             individuals.get(i).printValues();
         }
     }
 
-    void printLogTxt(){
+    private void printLogTxt(){
         //create folder
         String folder = "/ga";
         if (!new File(folder).exists()) {
