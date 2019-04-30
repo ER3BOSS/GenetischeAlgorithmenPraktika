@@ -35,7 +35,7 @@ public class GenerationHandler {
 
         for (int generation = 0; generation < maxGenerations; generation++){
 
-            selectLuckyFew(generationSize/2);
+            fitnessBiasedSelection(generationSize/2);
             //individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
 
             if (generation != maxGenerations -1) { // if not the last generation
@@ -49,7 +49,7 @@ public class GenerationHandler {
         }
     }
 
-    private void selectLuckyFew(int selectionSize){ //Programm freezes if selection is bigger than generation Size
+    private void fitnessBiasedSelection(int selectionSize){ //Programm freezes if selection is bigger than generation Size
         generateRandomCollection();
 
         individuals.clear();
@@ -57,6 +57,10 @@ public class GenerationHandler {
         for (int i = 0; i < selectionSize; i++){
             individuals.add(randomCollection.next());
         }
+    }
+
+    private void tournamentSelection(){
+
     }
 
     private void generateRandomCollection() {
