@@ -17,8 +17,8 @@ class ImageCreator {
         int[] imageData = calcImageSize();
         int width = imageData[0];
         int height = imageData[1];
-        int start_x = imageData[2];
-        int start_y = imageData[3];
+        int startX = imageData[2];
+        int startY = imageData[3];
 
 
         //initialize the graphic
@@ -30,7 +30,7 @@ class ImageCreator {
         g2.setColor(Color.GRAY);
         g2.fillRect(0, 0, width, height);
 
-        drawNodes(g2, start_x, start_y); //each node also draws an index and a line
+        drawNodes(g2, startX, startY); //each node also draws an index and a line
 
         //create folder
         String folder = "/ga";
@@ -51,31 +51,31 @@ class ImageCreator {
     private int[] calcImageSize() {
 
         int[] lowHighXY = calcLowHighCoords();
-        int low_x = lowHighXY[0];
-        int high_x = lowHighXY[1];
-        int low_y = lowHighXY[2];
-        int high_y = lowHighXY[3];
+        int lowX = lowHighXY[0];
+        int highX = lowHighXY[1];
+        int lowY = lowHighXY[2];
+        int highY = lowHighXY[3];
 
         //calc the spacing needed for the lines (used in the width/high calc)
-        int x_lines = ((low_x * -1 + high_x) - 1) * cellSize;
-        if (x_lines < 0) {
-            x_lines = 0;
+        int xLines = ((lowX * -1 + highX) - 1) * cellSize;
+        if (xLines < 0) {
+            xLines = 0;
         }
 
-        int y_lines = ((low_y * -1 + high_y) - 1) * cellSize;
-        if (y_lines < 0) {
-            y_lines = 0;
+        int yLines = ((lowY * -1 + highY) - 1) * cellSize;
+        if (yLines < 0) {
+            yLines = 0;
         }
 
         //calc with/height in a way that everything fits (+ a border of one cellSize)
-        int width = cellSize + (low_x * -1 + high_x) * cellSize + x_lines + 3 * cellSize; //width
-        int height = cellSize + (low_y * -1 + high_y) * cellSize + y_lines + 3 * cellSize; //height
+        int width = cellSize + (lowX * -1 + highX) * cellSize + xLines + 3 * cellSize; //width
+        int height = cellSize + (lowY * -1 + highY) * cellSize + yLines + 3 * cellSize; //height
 
-        int[] startPos = calcStartPos(low_x, low_y);
-        int start_x = startPos[0]; //start_x
-        int start_y = startPos[1]; //start_y
+        int[] startPos = calcStartPos(lowX, lowY);
+        int startX = startPos[0]; //start_x
+        int startY = startPos[1]; //start_y
 
-        return new int[]{width, height, start_x, start_y};
+        return new int[]{width, height, startX, startY};
     }
 
     private void drawNodes(Graphics2D g2, int startX, int startY) {
@@ -161,7 +161,7 @@ class ImageCreator {
         }
     }
 
-    private void drawIndex(Graphics2D g2, int index, int current_x, int current_y) {
+    private void drawIndex(Graphics2D g2, int index, int currentX, int currentY) {
 
         chooseTextColor(g2, index);
 
@@ -175,7 +175,7 @@ class ImageCreator {
         int labelWidth = metrics.stringWidth(label);
 
         //draw Text
-        g2.drawString(label, current_x + cellSize / 2 - labelWidth / 2, current_y + cellSize / 2 + offset);
+        g2.drawString(label, currentX + cellSize / 2 - labelWidth / 2, currentY + cellSize / 2 + offset);
     }
 
     private boolean notOverlapping(int x, int y, int index) {
