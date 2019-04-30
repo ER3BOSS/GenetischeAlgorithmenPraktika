@@ -38,7 +38,7 @@ class Kette {
         phenotype = random2DGenerator.generateIntelligentRandomGraph(kette);
     }
 
-    int calcMinEnergie() {
+    int calcMinEnergy() {
         int counter = 0;
         for (int i = 0; i < phenotype.size(); i++) {
             if (phenotype.get(i).getValue() == 1) {
