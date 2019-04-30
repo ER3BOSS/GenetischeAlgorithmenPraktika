@@ -7,11 +7,11 @@ import java.util.ArrayList;
 
 class ImageCreator {
 
-     private int cellSize = 80;
-     private ArrayList<Node> phenotype = new ArrayList<>();
+    private int cellSize = 80;
+    private ArrayList<Node> phenotype = new ArrayList<>();
 
     void createImage(ArrayList<Node> phenotype, String filename) {
-        
+
         this.phenotype = phenotype;
 
         int[] imageData = calcImageSize();
@@ -78,49 +78,49 @@ class ImageCreator {
         return new int[]{width, height, start_x, start_y};
     }
 
-    private void drawNodes(Graphics2D g2, int start_x, int start_y) {
+    private void drawNodes(Graphics2D g2, int startX, int startY) {
 
         //Set color of the first node
         chooseNodeColor(g2, 0);
 
         //create the initial node
-        g2.fillRect(start_x, start_y, cellSize, cellSize);
-        drawIndex(g2, 0, start_x, start_y);
+        g2.fillRect(startX, startY, cellSize, cellSize);
+        drawIndex(g2, 0, startX, startY);
 
         //needed later to draw the lines between nodes
-        int last_x = start_x;
-        int last_y = start_y;
+        int lastX = startX;
+        int lastY = startY;
         //create all other nodes
 
         for (int i = 1; i < phenotype.size(); i++) { //starts at 1 bc first node is already created
 
             //calc current x/y in the image
-            int current_x = start_x + (phenotype.get(i).getX() * cellSize * 2);
-            int current_y = start_y + (phenotype.get(i).getY() * cellSize * 2);
+            int currentX = startX + (phenotype.get(i).getX() * cellSize * 2);
+            int currentY = startY + (phenotype.get(i).getY() * cellSize * 2);
 
-            if  (notOverlapping(phenotype.get(i).getX(),phenotype.get(i).getY(),i)){
+            if (notOverlapping(phenotype.get(i).getX(), phenotype.get(i).getY(), i)) {
                 chooseNodeColor(g2, i);
-            }else {
+            } else {
                 g2.setColor(Color.RED);
             }
 
             //draw yourself
-            g2.fillRect(current_x, current_y, cellSize, cellSize);
+            g2.fillRect(currentX, currentY, cellSize, cellSize);
 
-            drawIndex(g2, i, current_x, current_y);
+            drawIndex(g2, i, currentX, currentY);
 
-            drawLine(g2, current_x, current_y, last_x, last_y);
+            drawLine(g2, currentX, currentY, lastX, lastY);
 
             //save your coords (needed to draw the next line)
-            last_x = current_x;
-            last_y = current_y;
+            lastX = currentX;
+            lastY = currentY;
         }
     }
 
     private int[] calcLowHighCoords() {//get the lowest and highest x/y coords
 
-        int low_x, high_x, low_y, high_y;
-        low_x = high_x = low_y = high_y = 0;
+        int lowX, highX, lowY, highY;
+        lowX = highX = lowY = highY = 0;
 
         for (Node node : phenotype) {
 
@@ -129,37 +129,28 @@ class ImageCreator {
             int y = node.getY();
 
             //check if there are new lowest/highest x/y values
-            if (x < low_x) {
-                low_x = x;
+            if (x < lowX) {
+                lowX = x;
             }
-            if (x > high_x) {
-                high_x = x;
+            if (x > highX) {
+                highX = x;
             }
-            if (y < low_y) {
-                low_y = y;
+            if (y < lowY) {
+                lowY = y;
             }
-            if (y > high_y) {
-                high_y = y;
-            }
-        }
-        return new int[]{low_x, high_x, low_y, high_y};
-    }
-
-    private boolean notOverlapping(int x, int y, int index){
-        for (int i = 0; i < phenotype.size(); i++) { //checks if node is overlapping with a different node
-            if(x == phenotype.get(i).getX() && y == phenotype.get(i).getY() && i != index){
-                return false;
+            if (y > highY) {
+                highY = y;
             }
         }
-        return true;
+        return new int[]{lowX, highX, lowY, highY};
     }
 
-    private int[] calcStartPos(int low_x, int low_y) {//calculates the position of the first node
+    private int[] calcStartPos(int lowX, int lowY) {//calculates the position of the first node
 
-        int start_x = 2 * -low_x * cellSize + cellSize; //start_x
-        int start_y = 2 * -low_y * cellSize + cellSize; //start_y
+        int startX = 2 * -lowX * cellSize + cellSize; //start_x
+        int startY = 2 * -lowY * cellSize + cellSize; //start_y
 
-        return new int[]{start_x, start_y};
+        return new int[]{startX, startY};
     }
 
     private void chooseNodeColor(Graphics2D g2, int index) {
@@ -187,21 +178,30 @@ class ImageCreator {
         g2.drawString(label, current_x + cellSize / 2 - labelWidth / 2, current_y + cellSize / 2 + offset);
     }
 
-    private void drawLine(Graphics2D g2, int current_x, int current_y, int last_x, int last_y) {
+    private boolean notOverlapping(int x, int y, int index) {
+        for (int i = 0; i < phenotype.size(); i++) { //checks if node is overlapping with a different node
+            if (x == phenotype.get(i).getX() && y == phenotype.get(i).getY() && i != index) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void drawLine(Graphics2D g2, int currentX, int currentY, int lastX, int lastY) {
         //draw line
         g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(5));
-        if (current_x == last_x) { // y changed
-            if (current_y > last_y) {
-                g2.drawLine(current_x + cellSize / 2, current_y, last_x + cellSize / 2, last_y + cellSize);//up
+        if (currentX == lastX) { // y changed
+            if (currentY > lastY) {
+                g2.drawLine(currentX + cellSize / 2, currentY, lastX + cellSize / 2, lastY + cellSize);//up
             } else {
-                g2.drawLine(current_x + cellSize / 2, current_y + cellSize, last_x + cellSize / 2, last_y); //down
+                g2.drawLine(currentX + cellSize / 2, currentY + cellSize, lastX + cellSize / 2, lastY); //down
             }
         } else { //x changed
-            if (current_x > last_x) {
-                g2.drawLine(current_x, current_y + cellSize / 2, last_x + cellSize, last_y + cellSize / 2); //right
+            if (currentX > lastX) {
+                g2.drawLine(currentX, currentY + cellSize / 2, lastX + cellSize, lastY + cellSize / 2); //right
             } else {
-                g2.drawLine(current_x + cellSize, current_y + cellSize / 2, last_x, last_y + cellSize / 2); //left
+                g2.drawLine(currentX + cellSize, currentY + cellSize / 2, lastX, lastY + cellSize / 2); //left
             }
         }
     }
