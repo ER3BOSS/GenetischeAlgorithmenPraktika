@@ -8,11 +8,12 @@ import java.util.concurrent.ThreadLocalRandom;
 class einfacherGenetischerAlgorithmus {
 
     private String sequence;
-    private int generationSize = 1000;
+    private int generationSize = 100;
     private ArrayList<Kette> individuals = new ArrayList<>();
     // todo: Fitness class with average, highest, sum and maybe more
     private double fitness = 0;
     private ImageCreator imageCreator = new ImageCreator();
+    private Kette bestIndividual;
 
     einfacherGenetischerAlgorithmus(String sequence) {
         this.sequence = sequence;
@@ -22,7 +23,8 @@ class einfacherGenetischerAlgorithmus {
         int generation = 0;
         initializeGeneration(generationSize);
         fitness = evaluateFitnessofGeneration(generation);
-        printLogTxt();
+        bestIndividual = individuals.get(0);
+        printLogTxt(generation);
         // todo: Fitness class and evaluate weather f needs to be the max or average
         while (fitness < 1000 && generation < maxGeneration) {
             generation++;
@@ -30,8 +32,8 @@ class einfacherGenetischerAlgorithmus {
             crossover();
             mutation();
             fitness = evaluateFitnessofGeneration(generation);
-            printLogTxt();
-            printBestOfGeneration();
+            printLogTxt(generation);
+            printBestOfGeneration(generation);
         }
         createImages();
     }
@@ -110,7 +112,10 @@ Lösungskandidaten in dieser Generation, Fitness des besten bisher gefundenen L�
 Anzahl der hydrophob/hydrophob-Kontakte des besten bisher gefunden Lösungskandidaten, Anzahl
 der Überlappungen im besten bisher gefundenen Lösungskandidaten
  */
-    private void printLogTxt(){
+    private void printLogTxt(int generation){
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
+        if(bestIndividual.calcFitness() < individuals.get(0).calcFitness())
+            bestIndividual = individuals.get(0);
         //create folder
         String folder = "/ga";
         if (!new File(folder).exists()) {
@@ -118,10 +123,10 @@ der Überlappungen im besten bisher gefundenen Lösungskandidaten
             new File(folder).mkdirs();
         }
         try (PrintWriter out = new PrintWriter(new FileWriter(new File("/ga" + File.separator +"Log.txt"),true))) {
-            for(Kette kette: individuals){
-                out.print(kette.calcFitness() + ", " + fitness );
-                out.print("\n");
-            }
+                out.print((Integer.toString(generation) + "," + fitness / generationSize) + "," +
+                        individuals.get(0).calcFitness() + "," + bestIndividual.calcFitness() + "," +
+                        bestIndividual.calcMinEnergie() + "," + bestIndividual.calcOverlap());
+
             out.print("\n");
         }catch (java.io.IOException e){
             System.out.println("Log file not found");
@@ -129,8 +134,6 @@ der Überlappungen im besten bisher gefundenen Lösungskandidaten
     }
 
     private void createImages() {
-
-        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
         for (int i = 0; i < 10; i++){
             imageCreator.createImage(individuals.get(i).getPhenotype(), i + ".png");
             System.out.println();
@@ -138,12 +141,12 @@ der Überlappungen im besten bisher gefundenen Lösungskandidaten
         }
     }
 
-    private void printBestOfGeneration(){
+    private void printBestOfGeneration(int generation){
 
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
-            imageCreator.createImage(individuals.get(0).getPhenotype(), "Generation_" + Integer.toString(0)+ ".png");
+            imageCreator.createImage(individuals.get(0).getPhenotype(), "Generation_" + Integer.toString(generation)+ ".png");
             System.out.println();
-            individuals.get(0).printValues();
+            //individuals.get(0).printValues();
         }
 
 

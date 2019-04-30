@@ -38,7 +38,7 @@ class Kette {
         phenotype = random2DGenerator.generateIntelligentRandomGraph(kette);
     }
 
-    private int calcMinEnergie() {
+    int calcMinEnergie() {
         int counter = 0;
         for (int i = 0; i < phenotype.size(); i++) {
             if (phenotype.get(i).getValue() == 1) {
@@ -65,7 +65,7 @@ class Kette {
         return counter / 2; //every connection is listed 2 times (a to b and b to a)
     }
 
-    private int calcOverlap(){
+    int calcOverlap(){
         int counter = 0;
         for (Node nodeA : phenotype){
             int a_x = nodeA.getX();
