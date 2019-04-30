@@ -98,7 +98,11 @@ class ImageCreator {
             int current_x = start_x + (phenotype.get(i).getX() * cellSize * 2);
             int current_y = start_y + (phenotype.get(i).getY() * cellSize * 2);
 
-            chooseNodeColor(g2, i);
+            if  (!isOverlap(phenotype.get(i).getX(),phenotype.get(i).getY(),i)){
+                chooseNodeColor(g2, i);
+            }else {
+                g2.setColor(Color.RED);
+            }
 
             //draw yourself
             g2.fillRect(current_x, current_y, cellSize, cellSize);
@@ -139,6 +143,15 @@ class ImageCreator {
             }
         }
         return new int[]{low_x, high_x, low_y, high_y};
+    }
+
+    private boolean isOverlap(int x, int y, int index){
+        for (int i = 0; i < phenotype.size(); i++) { //checks if node is overlapping with a different node
+            if(x == phenotype.get(i).getX() && y == phenotype.get(i).getY() && i != index){
+                return true;
+            }
+        }
+        return false;
     }
 
     private int[] calcStartPos(int low_x, int low_y) {//calculates the position of the first node

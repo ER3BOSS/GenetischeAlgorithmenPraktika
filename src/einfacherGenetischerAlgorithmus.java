@@ -207,7 +207,7 @@ class einfacherGenetischerAlgorithmus {
     private void printBestOfGeneration() {
 
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
-        imageCreator.createImage(individuals.get(0).getPhenotype(), "Generation_" + Integer.toString(0) + ".png");
+        imageCreator.createImage(individuals.get(0).getPhenotype(), "Generation_" + 0 + ".png");
         System.out.println();
         individuals.get(0).printValues();
     }
