@@ -2,8 +2,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -12,6 +10,7 @@ public class GenerationHandler {
     private String sequence;
     private ArrayList<Kette> individuals = new ArrayList<>();
     private ImageCreator imageCreator = new ImageCreator();
+    private RandomCollection<Kette> randomCollection = new RandomCollection<>();
     private int maxGenerations = 0;
     private int generationSize = 0;
     private int newBloodAmount = 0;
@@ -24,7 +23,7 @@ public class GenerationHandler {
     void initializeGeneration(int generationSize) {
         for (int i = 0; i < generationSize; i++) {
             individuals.add(new Kette(sequence));
-            individuals.get(i).generateByIntelligentRng();
+            individuals.get(i).generateByRng();
         }
     }
 
@@ -36,37 +35,40 @@ public class GenerationHandler {
 
         for (int generation = 0; generation < maxGenerations; generation++){
 
-            //sort the list so the best individuals are on top (0 and 1)
-            individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
-            individuals.subList(5, individuals.size()).clear(); // kill all but the 2 best
-            killDublicates();
+            selectLuckyFew(generationSize/2);
+            //individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
 
-            if (generation != maxGenerations -1) {
-                makeSomeBabys();
+            if (generation != maxGenerations -1) { // if not the last generation
+                //makeSomeBabys();
                 makeSomeMutants(generation);
-                makeSomeNewBlood(generation);
+                //makeSomeNewBlood(generation);
+            }else{ //if its the last generation
+                //individuals.subList(5, individuals.size()).clear(); // kill all but the x best
             }
-
-            printAverageFitness(generation);
-
             printLogTxt();
         }
     }
 
-    //todo: this seems not to work
-    private void killDublicates(){
-        for(int individualA = 1; individualA < individuals.size(); individualA++){
-            for (int individualB = 1; individualB < individuals.size(); individualB++){
-                if (individualA != individualB){
-                    if(Objects.hashCode(individualA) == Objects.hashCode(individualB)){
-                        individuals.remove(individualB);
-                    }
-                }
-            }
+    private void selectLuckyFew(int selectionSize){ //Programm freezes if selection is bigger than generation Size
+        generateRandomCollection();
+
+        individuals.clear();
+
+        for (int i = 0; i < selectionSize; i++){
+            individuals.add(randomCollection.next());
         }
     }
 
-    private void makeSomeBabys(){ //Todo refactor!!!
+    private void generateRandomCollection() {
+        double overallFitness = calcOverallFitness();
+        for (Kette individual : individuals){
+            double weight = (individual.calcFitness()/overallFitness);
+            weight = weight*100;
+            randomCollection.add(weight,individual);
+        }
+    }
+
+    private void makeSomeBabys(){ //Todo: remake function with crossover chance value
         //create 2 offspring's
         ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(0).getPhenotype());
         ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(1).getPhenotype());
@@ -78,10 +80,11 @@ public class GenerationHandler {
         individuals.add(ChromosomeHandler.chromosome2phenotype(childB, sequence));
     }
 
+    //Todo: make altering the mutation rate somewhat convenient
     private void makeSomeMutants(int generation){
         int initialPop = individuals.size();
         // fill the generationSize while leaving space for newBlood also no need to do that in the last gen
-        while (individuals.size() < generationSize - newBloodAmount && generation != maxGenerations -1 ){
+        while (individuals.size() < generationSize - newBloodAmount){
             int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
             ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getPhenotype());
             ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant, 0.1);
@@ -96,25 +99,25 @@ public class GenerationHandler {
         }
     }
 
-    //todo write a actually good log -> as .txt
-    private void printAverageFitness(int generation){
+    private double calcOverallFitness(){
         double avr = 0;
         for (Kette kette : individuals){
             avr += kette.calcFitness();
         }
-        avr = avr/individuals.size();
-        System.out.println( generation + ". Average: " + avr);
+        //avr = avr/individuals.size();
+        return avr;
     }
 
-    void printResult() { //todo: move image creation somewhere else
-        for (int i = 0; i < individuals.size(); i++){
+    void drawResult(int top) { // top defines the best x you want the image of
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
+        for (int i = 0; i < top; i++){
             imageCreator.createImage(individuals.get(i).getPhenotype(), Integer.toString(i)+ ".png");
             System.out.println();
             individuals.get(i).printValues();
         }
     }
 
-    void printLogTxt(){
+    private void printLogTxt(){
         //create folder
         String folder = "/ga";
         if (!new File(folder).exists()) {
