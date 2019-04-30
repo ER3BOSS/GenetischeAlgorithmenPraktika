@@ -33,7 +33,7 @@ class einfacherGenetischerAlgorithmus {
             printLogTxt();
             printBestOfGeneration();
         }
-        printResult();
+        createImages();
     }
 
     private void initializeGeneration(int generationSize) {
@@ -104,7 +104,12 @@ class einfacherGenetischerAlgorithmus {
         }
         shitCleanUp();
     }
-
+/*
+Generationsnummer, durchschnittliche Fitness in dieser Generation, Fitness des besten
+Lösungskandidaten in dieser Generation, Fitness des besten bisher gefundenen Lösungskandidaten,
+Anzahl der hydrophob/hydrophob-Kontakte des besten bisher gefunden Lösungskandidaten, Anzahl
+der Überlappungen im besten bisher gefundenen Lösungskandidaten
+ */
     private void printLogTxt(){
         //create folder
         String folder = "/ga";
@@ -123,7 +128,7 @@ class einfacherGenetischerAlgorithmus {
         }
     }
 
-    private void printResult() { //todo: move image creation somewhere else
+    private void createImages() {
 
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
         for (int i = 0; i < 10; i++){
