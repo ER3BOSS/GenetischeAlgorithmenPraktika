@@ -38,7 +38,7 @@ class Kette {
         phenotype = random2DGenerator.generateIntelligentRandomGraph(kette);
     }
 
-    private int calcMinEnergie() {
+    private int calcMinEnergy() {
         int counter = 0;
         for (int i = 0; i < phenotype.size(); i++) {
             if (phenotype.get(i).getValue() == 1) {
@@ -84,14 +84,14 @@ class Kette {
     }
 
     double calcFitness (){
-        double countOfPairs = calcMinEnergie();
+        double countOfPairs = calcMinEnergy();
         double countOfOverlap = calcOverlap();
         return ((1 + countOfPairs) / ((1 + countOfOverlap*4) * 10));
     }
 
     void printValues(){
         System.out.println();
-        System.out.println("Minimale Energie: " + calcMinEnergie());
+        System.out.println("Minimale Energie: " + calcMinEnergy());
         System.out.println("Overlap: " + calcOverlap());
         System.out.println("Fitness: " + calcFitness());
     }
