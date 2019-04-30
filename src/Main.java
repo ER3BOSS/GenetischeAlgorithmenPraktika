@@ -17,7 +17,7 @@ class Main {
         generationHandler.drawResult(2);
         */
 
-        einfacherGenetischerAlgorithmus a = new einfacherGenetischerAlgorithmus("11010101011110100010001000010001000101111010101011");
+        einfacherGenetischerAlgorithmus a = new einfacherGenetischerAlgorithmus("10100110100101100101");
         a.einfacherGenetischerAlgorithmus(100);
 
     }

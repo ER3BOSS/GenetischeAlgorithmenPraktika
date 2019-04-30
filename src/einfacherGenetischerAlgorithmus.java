@@ -35,17 +35,16 @@ class einfacherGenetischerAlgorithmus {
             printLogTxt(generation);
             printBestOfGeneration(generation);
         }
-        createImages();
+        //createImages();
     }
 
     private void initializeGeneration(int generationSize) {
         for (int i = 0; i < generationSize; i++) {
             individuals.add(new Kette(sequence));
-            individuals.get(i).generateByIntelligentRng();
+            individuals.get(i).generateByRng();
         }
     }
 
-    //todo write a actually good log -> as .txt
     private double evaluateFitnessofGeneration(int generation){
         double sum = 0;
         for (Kette kette : individuals){
@@ -125,7 +124,7 @@ der Überlappungen im besten bisher gefundenen Lösungskandidaten
         try (PrintWriter out = new PrintWriter(new FileWriter(new File("/ga" + File.separator +"Log.txt"),true))) {
                 out.print((Integer.toString(generation) + "," + fitness / generationSize) + "," +
                         individuals.get(0).calcFitness() + "," + bestIndividual.calcFitness() + "," +
-                        bestIndividual.calcMinEnergie() + "," + bestIndividual.calcOverlap());
+                        bestIndividual.calcMinEnergy() + "," + bestIndividual.calcOverlap());
 
             out.print("\n");
         }catch (java.io.IOException e){
