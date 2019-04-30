@@ -125,7 +125,7 @@ der Überlappungen im besten bisher gefundenen Lösungskandidaten
         try (PrintWriter out = new PrintWriter(new FileWriter(new File("/ga" + File.separator +"Log.txt"),true))) {
                 out.print((Integer.toString(generation) + "," + fitness / generationSize) + "," +
                         individuals.get(0).calcFitness() + "," + bestIndividual.calcFitness() + "," +
-                        bestIndividual.calcMinEnergie() + "," + bestIndividual.calcOverlap());
+                        bestIndividual.calcMinEnergy() + "," + bestIndividual.calcOverlap());
 
             out.print("\n");
         }catch (java.io.IOException e){
