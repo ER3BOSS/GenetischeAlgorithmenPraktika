@@ -4,17 +4,21 @@ class Kette {
     //Vars
     private String kette;
     private ArrayList<Node> phenotype = new ArrayList<>();
+    //Todo: Atm every entity has its own random2DGenerator Obj that's kinda silly
     private Random2DGenerator random2DGenerator = new Random2DGenerator();
     //Todo: Implement the Chromosome here (that way it there is no need to calculate it every time)
 
     //Constructor
     Kette(String new_string) {
         kette = new_string;
+        //could generate phenotype here
+        //calc fitness
     }
 
     Kette(String new_string, ArrayList<Node> phenotype) {
         kette = new_string;
         this.phenotype = phenotype;
+        //calc fitness
     }
 
     ArrayList<Node> getPhenotype() {
