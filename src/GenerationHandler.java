@@ -1,16 +1,11 @@
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RefineryUtilities;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -31,7 +26,7 @@ public class GenerationHandler {
     private GenerationLog log = new GenerationLog();
     private JFrame frame = new JFrame();
 
-    public GenerationHandler(String sequence) throws IOException {
+    GenerationHandler(String sequence) throws IOException {
         this.sequence = sequence;
 
         //create folder
@@ -64,7 +59,7 @@ public class GenerationHandler {
             individuals.get(i).generateByRng();
         }
         log.saveGeneration(individuals);
-        printLogTxt();
+        log.printLogTxt(generation,dataset);
     }
 
     void evolve(int maxGenerations, int newBloodAmount){
@@ -82,7 +77,7 @@ public class GenerationHandler {
 
             //individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
             log.saveGeneration(individuals);
-            printLogTxt();
+            log.printLogTxt(generation,dataset);
 
             // mutation, crossover etc.
             if (this.generation != this.maxGenerations -1) { // if not the last generation
@@ -98,7 +93,7 @@ public class GenerationHandler {
             //createImageOfTheBestIn();
         }
         log.saveGeneration(individuals);
-        printLogTxt();
+        log.printLogTxt(generation,dataset);
     }
 
 
@@ -161,7 +156,7 @@ public class GenerationHandler {
         for (int i = 0; i < numberOfTournaments; i++) {
             double bestFoundFitness = 0;
             for (int j = 0; j < tournamentSize; j++) {
-                int random = getRandomIntInRange(0,individuals.size()-1);
+                int random = RandomInt.nextInRange(0,individuals.size()-1);
                 Kette challenger = individuals.get(random);
                 if (challenger.calcFitness() > bestFoundFitness){
                     bestFoundFitness = challenger.calcFitness();
@@ -175,6 +170,7 @@ public class GenerationHandler {
         individuals.addAll(champions);
     }
 
+    //Todo: up for deletion?
     private void generateRandomCollection() {
         double overallFitness = log.getSumOfFintessIn(this.generation -1);
         for (Kette individual : individuals){
@@ -182,18 +178,6 @@ public class GenerationHandler {
             weight = weight*100;
             randomCollection.add(weight,individual);
         }
-    }
-
-    private void makeSomeBabys(){ //Todo: remake function with crossover chance value
-        //create 2 offspring's
-        ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(0).getPhenotype());
-        ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(1).getPhenotype());
-
-        ArrayList<Integer> childA = ChromosomeHandler.crossoverChromosome(chromosomeA,chromosomeB);
-        ArrayList<Integer> childB = ChromosomeHandler.crossoverChromosome(chromosomeB,chromosomeA);
-
-        individuals.add(ChromosomeHandler.chromosome2phenotype(childA, sequence));
-        individuals.add(ChromosomeHandler.chromosome2phenotype(childB, sequence));
     }
 
     //Todo: make altering the mutation rate somewhat convenient
@@ -232,37 +216,6 @@ public class GenerationHandler {
             individuals.get(i).printValues();
         }
     }
-
-    private void printLogTxt(){
-        try (PrintWriter out = new PrintWriter(new FileWriter(new File("/ga" + File.separator +"!Log.txt"),true))) {
-            out.print((Integer.toString(this.generation) + "," + log.getAverageFitnessIn(this.generation)) + "," +
-                    log.getGenerationsBestFitnessIn(this.generation) + "," + log.bestIndividual.calcFitness() + "," +
-                    log.bestIndividual.calcMinEnergy() + "," + log.bestIndividual.calcOverlap());
-
-            out.print("\n");
-
-            dataset.addValue( log.getGenerationsBestFitnessIn(this.generation) , "current best" , Integer.toString(generation) );
-            dataset.addValue( log.bestIndividual.calcFitness() , "overall best" , Integer.toString(generation) );
-            dataset.addValue( log.getAverageFitnessIn(this.generation) , "average" , Integer.toString(generation) );
-
-        }catch (java.io.IOException e){
-            System.out.println("Log file not found");
-        }
-        System.out.print(MessageFormat.format("Generation: {0} \t Average: {1} \t Best: {2} \n", Integer.toString(this.generation),
-                Double.toString(log.getAverageFitnessIn(this.generation)), Double.toString(log.getGenerationsBestFitnessIn(this.generation))));
-
-    }
-
-    private static int getRandomIntInRange(int min, int max) {
-
-        if (min >= max) {
-            throw new IllegalArgumentException("max must be greater than min");
-        }
-
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
-    }
-
 
     private void createImageOfTheBestIn(){
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));

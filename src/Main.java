@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Random;
 
 
 class Main {
@@ -19,4 +20,15 @@ class Main {
         generationHandler.drawResult(2);
 
         }
+}
+interface RandomInt{
+    static int nextInRange(int min, int max) {
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
 }
