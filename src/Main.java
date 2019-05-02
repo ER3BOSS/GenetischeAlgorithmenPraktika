@@ -1,7 +1,9 @@
+import java.io.IOException;
+
 import org.jfree.chart.ChartFactory;
 
 class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         /* Test sequences
         String SEQ20 = "10100110100101100101";
@@ -12,15 +14,10 @@ class Main {
         String SEQ50 = "11010101011110100010001000010001000101111010101011";
         */
 
-        GenerationHandler generationHandler = new GenerationHandler("11010101011110100010001000010001000101111010101011");
-        generationHandler.initializeGeneration(1000);
-        generationHandler.evolve(500,1000, 0);
+        GenerationHandler generationHandler = new GenerationHandler("10100110100101100101");
+        generationHandler.initializeGeneration(100);
+        generationHandler.evolve(100, 0);
         generationHandler.drawResult(2);
 
-
-        /*
-        einfacherGenetischerAlgorithmus a = new einfacherGenetischerAlgorithmus("11010101011110100010001000010001000101111010101011");
-        a.einfacherGenetischerAlgorithmus(100);
-        */
-    }
+        }
 }
