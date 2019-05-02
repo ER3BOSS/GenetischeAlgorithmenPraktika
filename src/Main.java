@@ -1,5 +1,7 @@
+import java.io.IOException;
+
 class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         /* Test sequences
         String SEQ20 = "10100110100101100101";
@@ -14,10 +16,6 @@ class Main {
         generationHandler.initializeGeneration(1000);
         generationHandler.evolve(1000,1000, 0);
         generationHandler.drawResult(2);
-
-        /*
-        einfacherGenetischerAlgorithmus a = new einfacherGenetischerAlgorithmus("11010101011110100010001000010001000101111010101011");
-        a.einfacherGenetischerAlgorithmus(100);
-        */
-    }
+        
+        }
 }

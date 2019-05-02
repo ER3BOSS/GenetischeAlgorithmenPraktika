@@ -85,7 +85,7 @@ class Random2DGenerator {
         int next_x = 0;
         int next_y = 0;
 
-        int direction = new Random().nextInt(4); //random 0 - 3
+        int direction = new Random(1337).nextInt(4); //random 0 - 3
         switch (direction) {
             case 0: //up
                 next_x = current_x;

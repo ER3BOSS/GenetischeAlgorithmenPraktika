@@ -1,7 +1,12 @@
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -14,9 +19,21 @@ public class GenerationHandler {
     private int maxGenerations = 0;
     private int generationSize = 0;
     private int newBloodAmount = 0;
+    private Log Log;
 
-    public GenerationHandler(String sequence) {
+    public GenerationHandler(String sequence) throws IOException {
         this.sequence = sequence;
+
+        //create folder
+        String folder = "/ga";
+        if (!new File(folder).exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            new File(folder).mkdirs();
+        }
+        else{
+            Path fileToDeletePath = Paths.get("/ga/!Log.txt");
+            Files.delete(fileToDeletePath);
+        }
     }
 
 
@@ -46,6 +63,48 @@ public class GenerationHandler {
                 //individuals.subList(5, individuals.size()).clear(); // kill all but the x best
             }
             printLogTxt();
+            createImageOfTheBestIn(generation);
+        }
+    }
+
+    // https://www.youtube.com/watch?v=9JzFcGdpT8E
+    private int fitnessBiasedSelection() {
+        Random rng = new Random();
+        double rand = Log.getCurrentFitness() * rng.nextDouble();
+        double partialSum = 0;
+        for (int x = generationSize - 1; x >= 0; x--) {
+            partialSum += individuals.get(x).calcFitness();
+            if (partialSum >= rand) {
+                return x;
+            }
+        }
+        return -1;
+    }
+
+    private void selection(){
+        for(int i = 0; i < generationSize; i++){
+            individuals.add(individuals.get(fitnessBiasedSelection()));
+        }
+        shitCleanUp();
+    }
+
+    private void shitCleanUp(){
+        for(int j = 0; j < generationSize; j++){
+            individuals.remove(j);
+        }
+    }
+
+    private void crossover(){ //Todo refactor!!!
+        //create 2 offspring's
+        for (int i = 0; i < generationSize / 8; i++) {
+            ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(fitnessBiasedSelection()).getPhenotype());
+            ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(fitnessBiasedSelection()).getPhenotype());
+
+            ArrayList<Integer> childA = ChromosomeHandler.crossoverChromosome(chromosomeA, chromosomeB);
+            ArrayList<Integer> childB = ChromosomeHandler.crossoverChromosome(chromosomeB, chromosomeA);
+
+            individuals.add(ChromosomeHandler.chromosome2phenotype(childA, sequence));
+            individuals.add(ChromosomeHandler.chromosome2phenotype(childB, sequence));
         }
     }
 
@@ -136,6 +195,14 @@ public class GenerationHandler {
         }catch (java.io.IOException e){
             System.out.println("Log file not found");
         }
+    }
+
+    private void createImageOfTheBestIn(int generation){
+
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
+        imageCreator.createImage(individuals.get(0).getPhenotype(), "Generation_" + Integer.toString(generation)+ ".png");
+        System.out.println();
+        //individuals.get(0).printValues();
     }
 
 }
