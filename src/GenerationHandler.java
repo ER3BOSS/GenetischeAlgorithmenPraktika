@@ -71,15 +71,16 @@ public class GenerationHandler {
         for (this.generation = 1; this.generation < this.maxGenerations; this.generation++){
 
             // selection Process
-            fitnessBiasedSelection(generationSize);
-            //tournamentSelection(5,500);
+            //fitnessBiasedSelection(generationSize);
+            tournamentSelection(5,500);
+
+
             //individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
             log.saveGeneration(individuals);
             printLogTxt();
 
             // mutation, crossover etc.
             if (this.generation != this.maxGenerations -1) { // if not the last generation
-                //makeSomeBabys();
                 //crossover(0.25); //Broken!
                 mutation(1);
                                 //makeSomeNewBlood(generation);
@@ -234,9 +235,9 @@ public class GenerationHandler {
 
             out.print("\n");
 
-            dataset.addValue( individuals.get(0).calcFitness() , "current best" , Integer.toString(generation) );
-            dataset.addValue( bestIndividual.calcFitness() , "overall best" , Integer.toString(generation) );
-            dataset.addValue( calcOverallFitness() / generationSize , "other" , Integer.toString(generation) );
+            dataset.addValue( log.getGenerationsBestFitnessIn(this.generation) , "current best" , Integer.toString(generation) );
+            dataset.addValue( log.bestIndividual.calcFitness() , "overall best" , Integer.toString(generation) );
+            dataset.addValue( log.getAverageFitnessIn(this.generation) , "average" , Integer.toString(generation) );
 
         }catch (java.io.IOException e){
             System.out.println("Log file not found");

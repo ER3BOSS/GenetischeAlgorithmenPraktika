@@ -1,6 +1,5 @@
 import java.io.IOException;
 
-import org.jfree.chart.ChartFactory;
 
 class Main {
     public static void main(String[] args) throws IOException {
@@ -15,8 +14,8 @@ class Main {
         */
 
         GenerationHandler generationHandler = new GenerationHandler("10100110100101100101");
-        generationHandler.initializeGeneration(100);
-        generationHandler.evolve(100, 0);
+        generationHandler.initializeGeneration(1000);
+        generationHandler.evolve(1000, 0);
         generationHandler.drawResult(2);
 
         }
