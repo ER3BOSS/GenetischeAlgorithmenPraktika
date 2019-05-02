@@ -1,3 +1,6 @@
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.ui.RefineryUtilities;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -16,10 +19,19 @@ public class GenerationHandler {
     private int generationSize = 0;
     private int newBloodAmount = 0;
     private Kette bestIndividual = new Kette("");
+    private DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
 
 
     public GenerationHandler(String sequence) {
         this.sequence = sequence;
+        LineChart chart = new LineChart(
+                "Fitness Graph" ,
+                "Live line graph showing the current progress",
+                dataset);
+
+        chart.pack( );
+        RefineryUtilities.centerFrameOnScreen( chart );
+        chart.setVisible( true );
     }
 
 
@@ -38,7 +50,7 @@ public class GenerationHandler {
 
         for (int generation = 0; generation < maxGenerations; generation++){
             //fitnessBiasedSelection(generationSize/2);
-            tournamentSelection(10,50);
+            tournamentSelection(5,500);
             //individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
 
 
@@ -154,8 +166,12 @@ public class GenerationHandler {
             out.print((Integer.toString(generation) + "," + calcOverallFitness() / generationSize) + "," +
                     individuals.get(0).calcFitness() + "," + bestIndividual.calcFitness() + "," +
                     bestIndividual.calcMinEnergy() + "," + bestIndividual.calcOverlap());
-
             out.print("\n");
+
+            dataset.addValue( individuals.get(0).calcFitness() , "current best" , Integer.toString(generation) );
+            dataset.addValue( bestIndividual.calcFitness() , "overall best" , Integer.toString(generation) );
+            dataset.addValue( calcOverallFitness() / generationSize , "other" , Integer.toString(generation) );
+
         }catch (java.io.IOException e){
             System.out.println("Log file not found");
         }
