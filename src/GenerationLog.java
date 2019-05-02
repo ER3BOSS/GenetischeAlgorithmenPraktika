@@ -6,7 +6,7 @@ import java.util.List;
     fitness, energy and overlap of the best overall canidate
 */
 
-public class generationLog {
+public class GenerationLog {
     public Kette bestIndividual = new Kette("");
     private List<Double> fitnessListCurrentGeneration = new ArrayList<>();
     private List<Double> generationsAverageFitness = new ArrayList<>();

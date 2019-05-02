@@ -1,6 +1,8 @@
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RefineryUtilities;
-
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,7 +28,8 @@ public class GenerationHandler {
     private int newBloodAmount = 0;
     private Kette bestIndividual = new Kette("");
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-    private generationLog log = new generationLog();
+    private GenerationLog log = new GenerationLog();
+    private JFrame frame = new JFrame();
 
     public GenerationHandler(String sequence) throws IOException {
         this.sequence = sequence;
@@ -41,6 +44,8 @@ public class GenerationHandler {
             Path fileToDeletePath = Paths.get("/ga/!Log.txt");
             Files.delete(fileToDeletePath);
         }
+
+        //creation of the Graph
         LineChart chart = new LineChart(
                 "Fitness Graph" ,
                 "Live line graph showing the current progress",
@@ -89,7 +94,8 @@ public class GenerationHandler {
                 //individuals.subList(5, individuals.size()).clear(); // kill all but the x best
             }
 
-            createImageOfTheBestIn();
+            //Warning: massive performance hit!!
+            //createImageOfTheBestIn();
         }
         log.saveGeneration(individuals);
         printLogTxt();
