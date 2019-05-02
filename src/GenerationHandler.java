@@ -20,6 +20,8 @@ public class GenerationHandler {
     private int generationSize = 0;
     private int newBloodAmount = 0;
     private Log Log;
+    private Kette bestIndividual = new Kette("");
+
 
     public GenerationHandler(String sequence) throws IOException {
         this.sequence = sequence;
@@ -51,10 +53,11 @@ public class GenerationHandler {
 
 
         for (int generation = 0; generation < maxGenerations; generation++){
-
-            fitnessBiasedSelection(generationSize/2);
+            //fitnessBiasedSelection(generationSize/2);
+            tournamentSelection(10,50);
             //individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
 
+            printLogTxt(generation);
             if (generation != maxGenerations -1) { // if not the last generation
                 //makeSomeBabys();
                 makeSomeMutants(generation);
@@ -118,8 +121,24 @@ public class GenerationHandler {
         }
     }
 
-    private void tournamentSelection(){
+    private void tournamentSelection(int tournamentSize, int numberOfTournaments){
+        ArrayList<Kette> champions = new ArrayList<>();
+        Kette champion = new Kette("");
+        for (int i = 0; i < numberOfTournaments; i++) {
+            double bestFoundFitness = 0;
+            for (int j = 0; j < tournamentSize; j++) {
+                int random = getRandomIntInRange(0,individuals.size()-1);
+                Kette challenger = individuals.get(random);
+                if (challenger.calcFitness() > bestFoundFitness){
+                    bestFoundFitness = challenger.calcFitness();
+                    champion = challenger;
+                }
+            }
+            champions.add(champion);
+        }
+        individuals.clear();
 
+        individuals.addAll(champions);
     }
 
     private void generateRandomCollection() {
@@ -180,7 +199,10 @@ public class GenerationHandler {
         }
     }
 
-    private void printLogTxt(){
+    private void printLogTxt(int generation){
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
+        if(bestIndividual.calcFitness() < individuals.get(0).calcFitness())
+            bestIndividual = individuals.get(0);
         //create folder
         String folder = "/ga";
         if (!new File(folder).exists()) {
@@ -188,14 +210,26 @@ public class GenerationHandler {
             new File(folder).mkdirs();
         }
         try (PrintWriter out = new PrintWriter(new FileWriter(new File("/ga" + File.separator +"Log.txt"),true))) {
-            for(Kette kette: individuals){
-                out.print(kette.calcFitness() + ",");
-            }
+            out.print((Integer.toString(generation) + "," + calcOverallFitness() / generationSize) + "," +
+                    individuals.get(0).calcFitness() + "," + bestIndividual.calcFitness() + "," +
+                    bestIndividual.calcMinEnergy() + "," + bestIndividual.calcOverlap());
+
             out.print("\n");
         }catch (java.io.IOException e){
             System.out.println("Log file not found");
         }
     }
+
+    private static int getRandomIntInRange(int min, int max) {
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
+
 
     private void createImageOfTheBestIn(int generation){
 

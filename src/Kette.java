@@ -7,6 +7,7 @@ class Kette {
     //Todo: Atm every entity has its own random2DGenerator Obj that's kinda silly
     private Random2DGenerator random2DGenerator = new Random2DGenerator();
     //Todo: Implement the Chromosome here (that way it there is no need to calculate it every time)
+    //Todo: Add double fitness
 
     //Constructor
     Kette(String new_string) {
