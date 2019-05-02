@@ -63,9 +63,9 @@ public class GenerationLog {
 
             out.print("\n");
 
-            dataset.addValue( getGenerationsBestFitnessIn(generation) , "current best" , Integer.toString(generation) );
-            dataset.addValue( bestIndividual.calcFitness() , "overall best" , Integer.toString(generation) );
-            dataset.addValue( getAverageFitnessIn(generation) , "average" , Integer.toString(generation) );
+            dataset.addValue(getGenerationsBestFitnessIn(generation) , "current best" , Integer.toString(generation));
+            dataset.addValue(bestIndividual.calcFitness() , "overall best" , Integer.toString(generation));
+            dataset.addValue(getAverageFitnessIn(generation) , "average" , Integer.toString(generation));
 
         }catch (java.io.IOException e){
             System.out.println("Log file not found");

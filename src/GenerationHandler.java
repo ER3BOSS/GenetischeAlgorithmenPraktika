@@ -1,6 +1,11 @@
+import org.jfree.chart.StandardChartTheme;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.RefineryUtilities;
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,9 +49,10 @@ public class GenerationHandler {
         LineChart chart = new LineChart(
                 "Fitness Graph" ,
                 "Live line graph showing the current progress",
-                dataset);
+                dataset
+        );
 
-        chart.pack( );
+        chart.pack();
         RefineryUtilities.centerFrameOnScreen( chart );
         chart.setVisible( true );
     }
@@ -71,7 +77,8 @@ public class GenerationHandler {
         for (this.generation = 1; this.generation < this.maxGenerations; this.generation++){
 
             // selection Process
-            tournamentSelection(5,500);
+            tournamentSelection(4,500);
+            //fitnessBiasedSelection(generationSize/2);
             //selection();
 
 
