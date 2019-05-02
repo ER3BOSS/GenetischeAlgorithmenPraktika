@@ -14,7 +14,7 @@
 ## Features
 - Anzeige des besten Ergebnisses von jeder Generation
 - Anzeige des besten Kanidatens am Ende
-- Log-Datei für jede Generation -> für Exel (Deutsches Zahlenformat)
+- generationLog-Datei für jede Generation -> für Exel (Deutsches Zahlenformat)
 
 ## 3. Termin
 - Ziel: einfacher genetischer Algorithmus

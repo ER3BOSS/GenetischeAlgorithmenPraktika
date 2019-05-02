@@ -7,19 +7,17 @@ class Kette {
     //Todo: Atm every entity has its own random2DGenerator Obj that's kinda silly
     private Random2DGenerator random2DGenerator = new Random2DGenerator();
     //Todo: Implement the Chromosome here (that way it there is no need to calculate it every time)
-    //Todo: Add double fitness
+    private double fitness;
 
     //Constructor
     Kette(String new_string) {
         kette = new_string;
         //could generate phenotype here
-        //calc fitness
     }
 
     Kette(String new_string, ArrayList<Node> phenotype) {
         kette = new_string;
         this.phenotype = phenotype;
-        //calc fitness
     }
 
     ArrayList<Node> getPhenotype() {
@@ -29,14 +27,18 @@ class Kette {
     void generateByRngNoOverlap() {
         while (phenotype.size() == 0) // 0 means returned graph is invalid
             phenotype = random2DGenerator.generateRandomGraphNoOverlap(kette);
+
+        fitness = calcFitness();
     }
 
     void generateByRng(){
         phenotype = random2DGenerator.generateRandomGraph(kette);
+        fitness = calcFitness();
     }
 
     void generateByIntelligentRng(){
         phenotype = random2DGenerator.generateIntelligentRandomGraph(kette);
+        fitness = calcFitness();
     }
 
     int calcMinEnergy() {
@@ -97,4 +99,7 @@ class Kette {
         System.out.println("Fitness: " + calcFitness());
     }
 
+    public double getFitness() {
+        return fitness;
+    }
 }

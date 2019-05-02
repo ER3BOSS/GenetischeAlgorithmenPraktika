@@ -12,9 +12,9 @@ class Main {
         String SEQ50 = "11010101011110100010001000010001000101111010101011";
         */
 
-        GenerationHandler generationHandler = new GenerationHandler("11010101011110100010001000010001000101111010101011");
-        generationHandler.initializeGeneration(1000);
-        generationHandler.evolve(5000,1000, 0);
+        GenerationHandler generationHandler = new GenerationHandler("10100110100101100101");
+        generationHandler.initializeGeneration(100);
+        generationHandler.evolve(100, 0);
         generationHandler.drawResult(2);
         
         }
