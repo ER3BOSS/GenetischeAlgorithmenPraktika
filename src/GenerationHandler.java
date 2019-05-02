@@ -76,8 +76,8 @@ public class GenerationHandler {
         for (this.generation = 1; this.generation < this.maxGenerations; this.generation++){
 
             // selection Process
-            //fitnessBiasedSelection(generationSize);
             tournamentSelection(5,500);
+            //selection();
 
 
             //individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
