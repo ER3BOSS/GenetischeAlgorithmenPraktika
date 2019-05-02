@@ -15,6 +15,7 @@
 - Anzeige des besten Ergebnisses von jeder Generation
 - Anzeige des besten Kanidatens am Ende
 - generationLog-Datei für jede Generation -> für Exel (Deutsches Zahlenformat)
+- automatische Graphengenerierung aus Logwerten
 
 ## 3. Termin
 - Ziel: einfacher genetischer Algorithmus
