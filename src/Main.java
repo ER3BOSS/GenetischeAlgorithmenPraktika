@@ -15,8 +15,8 @@ class Main {
         */
 
         GenerationHandler generationHandler = new GenerationHandler("11010101011110100010001000010001000101111010101011");
-        generationHandler.initializeGeneration(1000);
-        generationHandler.evolve(500, 0);
+        generationHandler.initializeGeneration(100);
+        generationHandler.evolve(100, 50);
         generationHandler.drawResult(2);
 
         }

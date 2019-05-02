@@ -77,7 +77,7 @@ public class GenerationHandler {
         for (this.generation = 1; this.generation < this.maxGenerations; this.generation++){
 
             // selection Process
-            tournamentSelection(10,500);
+            tournamentSelection(10,generationSize/2);
             //fitnessBiasedSelection(generationSize/2);
             //selection();
 
@@ -89,8 +89,8 @@ public class GenerationHandler {
             // mutation, crossover etc.
             if (this.generation != this.maxGenerations -1) { // if not the last generation
                 //crossover(0.25); //Broken!
-                mutation(1);
-                                //makeSomeNewBlood(generation);
+                mutation(0.1);
+                makeSomeNewBlood();
                 shitCleanUp();
             }else{ //if its the last generation
                 //individuals.subList(5, individuals.size()).clear(); // kill all but the x best
@@ -191,10 +191,10 @@ public class GenerationHandler {
     private void mutation(double rate){
         int initialPop = individuals.size();
         // fill the generationSize while leaving space for newBlood also no need to do that in the last gen
-        while (individuals.size() < (generationSize * rate - newBloodAmount) + generationSize){
+        while (individuals.size() < (generationSize - newBloodAmount)){
             int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
             ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getPhenotype());
-            ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant, 0.1);
+            ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant, rate);
             individuals.add(ChromosomeHandler.chromosome2phenotype(mutant, sequence));
         }
     }
@@ -202,7 +202,8 @@ public class GenerationHandler {
     private void makeSomeNewBlood(){
         while (individuals.size() < generationSize){
             individuals.add(new Kette(sequence));
-            individuals.get(individuals.size()-1).generateByRng();
+            individuals.get(individuals.size()-1).generateByIntelligentRng();
+            individuals.get(individuals.size()-1).calcFitness();
         }
     }
 
