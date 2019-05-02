@@ -5,6 +5,8 @@ import java.util.TreeMap;
 
 // see https://stackoverflow.com/questions/6409652/random-weighted-selection-in-java
 
+//class not used atm
+
 public class RandomCollection<E> {
     private final NavigableMap<Double, E> map = new TreeMap<Double, E>();
     private final Random random;
