@@ -77,7 +77,7 @@ public class GenerationHandler {
         for (this.generation = 1; this.generation < this.maxGenerations; this.generation++){
 
             // selection Process
-            tournamentSelection(4,500);
+            tournamentSelection(10,500);
             //fitnessBiasedSelection(generationSize/2);
             //selection();
 
