@@ -77,7 +77,7 @@ public class GenerationHandler {
         for (this.generation = 1; this.generation < this.maxGenerations; this.generation++){
 
             // selection Process
-            tournamentSelection(4,generationSize/2);
+            tournamentSelection(10,generationSize/2);
             //fitnessBiasedSelection(generationSize/2);
             //selection();
 
@@ -88,8 +88,8 @@ public class GenerationHandler {
 
             // mutation, crossover etc.
             if (this.generation != this.maxGenerations -1) { // if not the last generation
-                //crossover(0.25); //Broken!
-                mutation(0.1);
+                crossover(0.25); //Fixed!?
+                mutation(0.01);
                 makeSomeNewBlood();
                 shitCleanUp();
             }else{ //if its the last generation
@@ -101,28 +101,7 @@ public class GenerationHandler {
         }
         log.saveGeneration(individuals);
         log.printLogTxt(generation,dataset);
-    }
-
-
-    // https://www.youtube.com/watch?v=9JzFcGdpT8E
-    private int fitnessBiasedSelection() {
-        Random rng = new Random();
-        double rand = log.getSumOfFintessIn(this.generation) * rng.nextDouble();
-        double partialSum = 0;
-        for (int x = generationSize - 1; x >= 0; x--) {
-            partialSum += individuals.get(x).getFitness();
-            if (partialSum >= rand) {
-                return x;
-            }
-        }
-        return -1;
-    }
-
-    private void selection(){
-        for(int i = 0; i < generationSize; i++){
-            individuals.add(individuals.get(fitnessBiasedSelection()));
-        }
-        shitCleanUp();
+        log.crateImageOfBestIndividual();
     }
 
     private void shitCleanUp(){
@@ -135,9 +114,12 @@ public class GenerationHandler {
 
     private void crossover(double rate){ //Todo refactor!!!
         //create 2 offspring's
-        for (int i = 0; i < ((generationSize * rate/2)); i++) {
-            ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(fitnessBiasedSelection()).getPhenotype());
-            ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(fitnessBiasedSelection()).getPhenotype());
+        int initialPop = individuals.size();
+        for (int i = 0; i < ((generationSize * rate/2) + initialPop); i++) {
+            int randomNum1 = ThreadLocalRandom.current().nextInt(0, initialPop);
+            int randomNum2 = ThreadLocalRandom.current().nextInt(0, initialPop);
+            ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(randomNum1).getPhenotype());
+            ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(randomNum2).getPhenotype());
 
             ArrayList<Integer> childA = ChromosomeHandler.crossoverChromosome(chromosomeA, chromosomeB);
             ArrayList<Integer> childB = ChromosomeHandler.crossoverChromosome(chromosomeB, chromosomeA);

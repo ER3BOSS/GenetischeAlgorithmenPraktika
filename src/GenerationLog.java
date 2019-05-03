@@ -70,8 +70,14 @@ public class GenerationLog {
         }catch (java.io.IOException e){
             System.out.println("Log file not found");
         }
-        System.out.print(MessageFormat.format("Generation: {0} \t Average: {1} \t Best: {2} \n", Integer.toString(generation),
-                Double.toString(getAverageFitnessIn(generation)), Double.toString(getGenerationsBestFitnessIn(generation))));
+        System.out.print(MessageFormat.format("Generation: {0} \t Average: {1} \t Best: {2} \t Energy: {3} \n", Integer.toString(generation),
+                Double.toString(getAverageFitnessIn(generation)), Double.toString(getGenerationsBestFitnessIn(generation)), Integer.toString(bestIndividual.calcMinEnergy())));
 
+    }
+
+    public void crateImageOfBestIndividual(){
+        ImageCreator imageCreator = new ImageCreator();
+        imageCreator.createImage(bestIndividual.getPhenotype(), "!BestIndividual" + ".png");
+        bestIndividual.printValues();
     }
 }
