@@ -74,4 +74,9 @@ public class GenerationLog {
                 Double.toString(getAverageFitnessIn(generation)), Double.toString(getGenerationsBestFitnessIn(generation))));
 
     }
+
+    public void crateImageOfBestIndividual(){
+        ImageCreator imageCreator = new ImageCreator();
+        imageCreator.createImage(bestIndividual.getPhenotype(), "!BestIndividual" + ".png");
+    }
 }

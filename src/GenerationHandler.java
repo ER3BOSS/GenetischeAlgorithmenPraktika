@@ -1,18 +1,13 @@
-import org.jfree.chart.StandardChartTheme;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.RefineryUtilities;
+
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -26,7 +21,6 @@ public class GenerationHandler {
     private int maxGenerations = 0;
     private int generationSize = 0;
     private int newBloodAmount = 0;
-    private Kette bestIndividual = new Kette("");
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
     private GenerationLog log = new GenerationLog();
     private JFrame frame = new JFrame();
@@ -77,9 +71,8 @@ public class GenerationHandler {
         for (this.generation = 1; this.generation < this.maxGenerations; this.generation++){
 
             // selection Process
-            tournamentSelection(10,generationSize/2);
-            //fitnessBiasedSelection(generationSize/2);
-            //selection();
+            //tournamentSelection(4,generationSize/2);
+            fitnessBiasedSelection(generationSize/2);
 
 
             //individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
@@ -88,41 +81,19 @@ public class GenerationHandler {
 
             // mutation, crossover etc.
             if (this.generation != this.maxGenerations -1) { // if not the last generation
-                //crossover(0.25); //Broken!
-                mutation(0.1);
+                crossover(0.25); //Fixed!?
+                mutation(0.01);
                 makeSomeNewBlood();
                 shitCleanUp();
             }else{ //if its the last generation
                 //individuals.subList(5, individuals.size()).clear(); // kill all but the x best
             }
-
             //Warning: massive performance hit!!
             //createImageOfTheBestIn();
         }
         log.saveGeneration(individuals);
         log.printLogTxt(generation,dataset);
-    }
-
-
-    // https://www.youtube.com/watch?v=9JzFcGdpT8E
-    private int fitnessBiasedSelection() {
-        Random rng = new Random();
-        double rand = log.getSumOfFintessIn(this.generation) * rng.nextDouble();
-        double partialSum = 0;
-        for (int x = generationSize - 1; x >= 0; x--) {
-            partialSum += individuals.get(x).getFitness();
-            if (partialSum >= rand) {
-                return x;
-            }
-        }
-        return -1;
-    }
-
-    private void selection(){
-        for(int i = 0; i < generationSize; i++){
-            individuals.add(individuals.get(fitnessBiasedSelection()));
-        }
-        shitCleanUp();
+        log.crateImageOfBestIndividual();
     }
 
     private void shitCleanUp(){
@@ -135,9 +106,12 @@ public class GenerationHandler {
 
     private void crossover(double rate){ //Todo refactor!!!
         //create 2 offspring's
-        for (int i = 0; i < ((generationSize * rate/2)); i++) {
-            ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(fitnessBiasedSelection()).getPhenotype());
-            ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(fitnessBiasedSelection()).getPhenotype());
+        int initialPop = individuals.size();
+        for (int i = 0; i < ((generationSize * rate/2) + initialPop); i++) {
+            int randomNum1 = ThreadLocalRandom.current().nextInt(0, initialPop);
+            int randomNum2 = ThreadLocalRandom.current().nextInt(0, initialPop);
+            ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(randomNum1).getPhenotype());
+            ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(randomNum2).getPhenotype());
 
             ArrayList<Integer> childA = ChromosomeHandler.crossoverChromosome(chromosomeA, chromosomeB);
             ArrayList<Integer> childB = ChromosomeHandler.crossoverChromosome(chromosomeB, chromosomeA);
@@ -205,15 +179,6 @@ public class GenerationHandler {
             individuals.get(individuals.size()-1).generateByIntelligentRng();
             individuals.get(individuals.size()-1).calcFitness();
         }
-    }
-
-    private double calcOverallFitness(){
-        double avr = 0;
-        for (Kette kette : individuals){
-            avr += kette.calcFitness();
-        }
-        //avr = avr/individuals.size();
-        return avr;
     }
 
     void drawResult(int top) { // top defines the best x you want the image of
