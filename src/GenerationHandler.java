@@ -71,8 +71,8 @@ public class GenerationHandler {
         for (this.generation = 1; this.generation < this.maxGenerations; this.generation++){
 
             // selection Process
-            //tournamentSelection(4,generationSize/2);
-            fitnessBiasedSelection(generationSize/2);
+            tournamentSelection(2,generationSize/2);
+            //fitnessBiasedSelection(generationSize/2);
 
 
             //individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
@@ -178,15 +178,6 @@ public class GenerationHandler {
             individuals.add(new Kette(sequence));
             individuals.get(individuals.size()-1).generateByIntelligentRng();
             individuals.get(individuals.size()-1).calcFitness();
-        }
-    }
-
-    void drawResult(int top) { // top defines the best x you want the image of
-        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
-        for (int i = 0; i < top; i++){
-            imageCreator.createImage(individuals.get(i).getPhenotype(), Integer.toString(i)+ ".png");
-            System.out.println();
-            individuals.get(i).printValues();
         }
     }
 
