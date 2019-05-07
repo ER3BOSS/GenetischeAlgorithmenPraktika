@@ -1,10 +1,6 @@
 import java.io.IOException;
 import java.util.Random;
 
-
-class Main {
-    public static void main(String[] args) throws IOException {
-
         /* Test sequences
         String SEQ20 = "10100110100101100101";
         String SEQ24 = "110010010010010010010011";
@@ -14,21 +10,21 @@ class Main {
         String SEQ50 = "11010101011110100010001000010001000101111010101011";
         */
 
-        GenerationHandler generationHandler = new GenerationHandler("11010101011110100010001000010001000101111010101011");
+class Main {
+    public static void main(String[] args) throws IOException {
+
+        GenerationHandler generationHandler = new GenerationHandler("10100110100101100101");
         generationHandler.initializeGeneration(1000);
-        generationHandler.evolve(400, 0);
-        generationHandler.drawResult(2);
+
+        generationHandler.evolve(
+                300,
+                0,
+                0.1,
+                0.1,
+                SelectType.TOURNAMENT
+        );
+
+        generationHandler.drawResult(1);
 
         }
-}
-interface RandomInt{
-    static int nextInRange(int min, int max) {
-
-        if (min >= max) {
-            throw new IllegalArgumentException("max must be greater than min");
-        }
-
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
-    }
 }
