@@ -77,7 +77,7 @@ public class GenerationHandler {
         for (this.generation = 1; this.generation < this.maxGenerations; this.generation++){
 
             // selection Process
-            tournamentSelection(10,generationSize/2);
+            tournamentSelection(4,generationSize/2);
             //fitnessBiasedSelection(generationSize/2);
             //selection();
 
@@ -88,8 +88,8 @@ public class GenerationHandler {
 
             // mutation, crossover etc.
             if (this.generation != this.maxGenerations -1) { // if not the last generation
-                crossover(0.25); //Fixed!?
-                mutation(0.01);
+                crossover(0.25);
+                mutation(0.1);
                 makeSomeNewBlood();
                 shitCleanUp();
             }else{ //if its the last generation
