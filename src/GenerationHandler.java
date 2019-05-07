@@ -104,11 +104,15 @@ class GenerationHandler {
         int initialPop = individuals.size();
         // fill the generationSize while leaving space for newBlood also no need to do that in the last gen
         while (individuals.size() < (generationSize - newBloodAmount)) {
-            int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
-            ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getPhenotype());
-            ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant, rate);
-            individuals.add(ChromosomeHandler.chromosome2phenotype(mutant, sequence));
+            createMutant(rate, initialPop);
         }
+    }
+
+    private void createMutant(double rate, int initialPop) {
+        int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
+        ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getPhenotype());
+        ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant, rate);
+        individuals.add(ChromosomeHandler.chromosome2phenotype(mutant, sequence));
     }
 
     private void makeSomeNewBlood() {

@@ -1,18 +1,14 @@
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 
 import java.awt.*;
 
-public class LineChart extends ApplicationFrame {
-    public LineChart( String applicationTitle , String chartTitle , DefaultCategoryDataset dataset) {
+class LineChart extends ApplicationFrame {
+    LineChart(String applicationTitle, String chartTitle, DefaultCategoryDataset dataset) {
         super(applicationTitle);
         JFreeChart lineChart = ChartFactory.createLineChart(
                 chartTitle,

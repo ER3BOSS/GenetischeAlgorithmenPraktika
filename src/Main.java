@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.Random;
 
         /* Test sequences
         String SEQ20 = "10100110100101100101";
@@ -13,11 +12,11 @@ import java.util.Random;
 class Main {
     public static void main(String[] args) throws IOException {
 
-        GenerationHandler generationHandler = new GenerationHandler("10100110100101100101");
+        GenerationHandler generationHandler = new GenerationHandler("11010101011110100010001000010001000101111010101011");
         generationHandler.initializeGeneration(1000);
 
         generationHandler.evolve(
-                300,
+                500,
                 0,
                 0.1,
                 0.1,
@@ -25,6 +24,5 @@ class Main {
         );
 
         generationHandler.drawResult(1);
-
-        }
+    }
 }

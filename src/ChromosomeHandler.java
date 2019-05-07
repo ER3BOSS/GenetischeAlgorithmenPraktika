@@ -45,15 +45,6 @@ public class ChromosomeHandler {
         return chromosome;
     }
 
-    static void printChromosome (ArrayList<Integer> chromosome){
-        System.out.println();
-        System.out.println("### Chromosome ###");
-        System.out.println();
-        for (Integer gene : chromosome) {
-            System.out.print(gene);
-        }
-    }
-
     static ArrayList<Integer> crossoverChromosome(ArrayList<Integer> chromosomeA, ArrayList<Integer> chromosomeB){
         ArrayList<Integer> crossover = new ArrayList<>();
         double random = Math.random();

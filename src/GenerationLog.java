@@ -12,13 +12,13 @@ import java.util.List;
     fitness, energy and overlap of the best overall canidate
 */
 
-public class GenerationLog {
-    public Kette bestIndividual = new Kette("");
+class GenerationLog {
+    private Kette bestIndividual = new Kette("");
     private List<Double> fitnessListCurrentGeneration = new ArrayList<>();
     private List<Double> generationsAverageFitness = new ArrayList<>();
     private List<Double> generationsBestFitness = new ArrayList<>();
 
-    public void saveGeneration(List<Kette> individuals) {
+    void saveGeneration(List<Kette> individuals) {
         fitnessListCurrentGeneration.clear();
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
         generationsBestFitness.add(individuals.get(0).calcFitness());
@@ -31,18 +31,15 @@ public class GenerationLog {
         generationsAverageFitness.add(calcAverageFitness());
     }
 
-    void addFitness(double fitness){
-
-    }
     double getSumOfFintessIn(int generation){
         return generationsAverageFitness.get(generation) * fitnessListCurrentGeneration.size();
     }
 
-    public double getAverageFitnessIn(int generation) {
+    private double getAverageFitnessIn(int generation) {
         return generationsAverageFitness.get(generation);
     }
 
-    public double getGenerationsBestFitnessIn(int generation) {
+    private double getGenerationsBestFitnessIn(int generation) {
         return generationsBestFitness.get(generation);
     }
 
@@ -55,7 +52,7 @@ public class GenerationLog {
         return avr;
     }
 
-    public void printLogTxt(int generation, DefaultCategoryDataset dataset){
+    void printLogTxt(int generation, DefaultCategoryDataset dataset){
         try (PrintWriter out = new PrintWriter(new FileWriter(new File("/ga" + File.separator +"!Log.txt"),true))) {
             out.print((Integer.toString(generation) + "," + getAverageFitnessIn(generation)) + "," +
                     getGenerationsBestFitnessIn(generation) + "," + bestIndividual.calcFitness() + "," +
@@ -75,7 +72,7 @@ public class GenerationLog {
 
     }
 
-    public void crateImageOfBestIndividual(){
+    void crateImageOfBestIndividual(){
         ImageCreator imageCreator = new ImageCreator();
         imageCreator.createImage(bestIndividual.getPhenotype(), "!BestIndividual" + ".png");
         bestIndividual.printValues();

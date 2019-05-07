@@ -1,5 +1,4 @@
 import java.util.NavigableMap;
-import java.util.Objects;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -7,32 +6,29 @@ import java.util.TreeMap;
 
 //class not used atm
 
-public class RandomCollection<E> {
-    private final NavigableMap<Double, E> map = new TreeMap<Double, E>();
+class RandomCollection<E> {
+    private final NavigableMap<Double, E> map = new TreeMap<>();
     private final Random random;
     private double total = 0;
 
-    public RandomCollection() {
+    RandomCollection() {
         this(new Random());
     }
 
-    public RandomCollection(Random random) {
+    private RandomCollection(Random random) {
         this.random = random;
     }
 
-    public RandomCollection<E> add(double weight, E result) {
-        if (weight <= 0) return this;
+    void add(double weight, E result) {
+        if (weight <= 0) return;
         total += weight;
         map.put(total, result);
-        return this;
     }
 
-    public E next() {
+    E next() {
         double value;
-        int count = 0;
         do {
             value = random.nextDouble() * total;
-            count ++;
         } while (map.higherEntry(value) == null);
         //return map.remove(map.higherEntry(value).getKey());
         return map.higherEntry(value).getValue();
