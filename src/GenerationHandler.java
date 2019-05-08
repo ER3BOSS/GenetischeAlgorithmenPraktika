@@ -86,10 +86,13 @@ class GenerationHandler {
 
     private void selection(SelectType selectType) {
         // selection Process
-        if (selectType == SelectType.FITNESS) {
-            fitnessBiasedSelection(selectionSize);
-        } else {
-            tournamentSelection(4, selectionSize);
+        switch (selectType){
+            case FITNESS:
+                fitnessBiasedSelection(selectionSize);
+                break;
+            case TOURNAMENT:
+                tournamentSelection(4, selectionSize);
+                break;
         }
     }
 
