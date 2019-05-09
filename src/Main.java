@@ -26,7 +26,8 @@ class Main {
                 0,
                 0.1,
                 0.1,
-                SelectType.FITNESS
+                SelectType.FITNESS,
+                100
         );
 
         generationHandler.drawResult(0);
