@@ -72,9 +72,9 @@ class GenerationLog {
 
     }
 
-    void crateImageOfBestIndividual(){
+    void crateImageOfBestIndividual(int sequenzSize){
         ImageCreator imageCreator = new ImageCreator();
-        imageCreator.createImage(bestIndividual.getPhenotype(), "!BestIndividual" + ".png");
+        imageCreator.createImage(bestIndividual.getPhenotype(), "!BestIndividual_S" + sequenzSize + ".png");
         bestIndividual.printValues();
     }
 }
