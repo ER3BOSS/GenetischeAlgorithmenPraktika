@@ -66,9 +66,9 @@ class GenerationHandler {
     void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType, int breakCondition) {
         this.newBloodAmount = newBloodAmount;
         this.selectionSize = generationSize / 2;
-        int referenceGen = breakCondition;
+        generation = 1;
 
-        for (generation = 1; generation < maxGenerations; generation++) {
+        while (generation < maxGenerations && improving(breakCondition)) {
 
             selection(selectType);
             crossover(crossoverRate);
@@ -78,19 +78,23 @@ class GenerationHandler {
             log.saveGeneration(individuals);
             log.printLogTxt(generation, dataset);
 
-            if (generation > referenceGen){
-                double referenceAvrg = log.getAverageFitnessIn(generation - referenceGen);
-                double currentAvrg = log.getAverageFitnessIn(generation);
-                if (currentAvrg < referenceAvrg + 1)
-                    break;
-            }
-
             //Warning: massive performance hit!!
             //createImageOfTheBestIn();
+
+            generation ++;
         }
         log.saveGeneration(individuals);
         log.printLogTxt(generation, dataset);
         log.crateImageOfBestIndividual(sequence.length());
+    }
+
+    private boolean improving(int referenceGen){
+        if (generation > referenceGen){
+            double referenceAvrg = log.getAverageFitnessIn(generation - 1 - referenceGen);
+            double currentAvrg = log.getAverageFitnessIn(generation - 1);
+            return !(currentAvrg < referenceAvrg);
+        }
+        return true;
     }
 
     private void selection(SelectType selectType) {
