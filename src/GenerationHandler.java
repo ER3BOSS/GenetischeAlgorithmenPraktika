@@ -187,11 +187,14 @@ class GenerationHandler {
 
     private void generateRandomCollection() {
         double overallFitness = log.getSumOfFintessIn(this.generation - 1);
+        double overallWeight = 0;
         for (Kette individual : individuals) {
             double weight = (individual.calcFitness() / overallFitness);
             weight = weight * 100;
+            //overallWeight += weight;
             randomCollection.add(weight, individual);
         }
+        //System.out.println("Overall weight in gen " + generation + " = " + overallWeight);
     }
 
     // todo: move somewhere else
