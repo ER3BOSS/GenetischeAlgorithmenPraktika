@@ -66,6 +66,7 @@ class GenerationHandler {
     void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType) {
         this.newBloodAmount = newBloodAmount;
         this.selectionSize = generationSize / 2;
+        int referenceGen = 100;
 
         for (generation = 1; generation < maxGenerations; generation++) {
 
@@ -76,6 +77,14 @@ class GenerationHandler {
 
             log.saveGeneration(individuals);
             log.printLogTxt(generation, dataset);
+
+            if (generation > referenceGen){
+                double referenceAvrg = log.getAverageFitnessIn(generation - referenceGen);
+                double currentAvrg = log.getAverageFitnessIn(generation);
+                if (currentAvrg < referenceAvrg + 1)
+                    break;
+            }
+
             //Warning: massive performance hit!!
             //createImageOfTheBestIn();
         }
@@ -134,7 +143,7 @@ class GenerationHandler {
         for (int i = 0; i < selectionSize; i++) {
             individuals.add(randomCollection.next());
         }
-        //randomCollection.clear();
+        randomCollection.clear();
     }
 
     private void tournamentSelection(int tournamentSize, int numberOfTournaments) {
