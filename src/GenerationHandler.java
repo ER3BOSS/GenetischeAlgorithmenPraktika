@@ -126,7 +126,8 @@ class GenerationHandler {
         }
     }
 
-    private void fitnessBiasedSelection(int selectionSize) { //Programm freezes if selection is bigger than generation Size
+    // Program freezes if selection is bigger than generation Size
+    private void fitnessBiasedSelection(int selectionSize) {
         generateRandomCollection();
 
         individuals.clear();
@@ -134,7 +135,7 @@ class GenerationHandler {
         for (int i = 0; i < selectionSize; i++) {
             individuals.add(randomCollection.next());
         }
-        //randomCollection.clear();
+        randomCollection.clear();
     }
 
     private void tournamentSelection(int tournamentSize, int numberOfTournaments) {
@@ -192,7 +193,7 @@ class GenerationHandler {
         for (int i = 0; i < top; i++) {
             imageCreator.createImage(individuals.get(i).getPhenotype(), Integer.toString(i) + ".png");
             System.out.println();
-            individuals.get(i).printValues();
+            //individuals.get(i).printValues();
         }
     }
 
