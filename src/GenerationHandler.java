@@ -172,7 +172,6 @@ class GenerationHandler {
         individuals.add(ChromosomeHandler.chromosome2phenotype(child, sequence));
     }
 
-    //Todo: up for deletion?
     private void generateRandomCollection() {
         double overallFitness = log.getSumOfFintessIn(this.generation - 1);
         for (Kette individual : individuals) {

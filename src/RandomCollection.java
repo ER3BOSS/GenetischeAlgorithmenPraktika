@@ -30,8 +30,8 @@ class RandomCollection<E> {
         do {
             value = random.nextDouble() * total;
         } while (map.higherEntry(value) == null);
-        //return map.remove(map.higherEntry(value).getKey());
-        return map.higherEntry(value).getValue();
+        return map.remove(map.higherEntry(value).getKey());
+        //return map.higherEntry(value).getValue();
     }
 
     public void clear() {
