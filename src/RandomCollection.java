@@ -33,4 +33,8 @@ class RandomCollection<E> {
         //return map.remove(map.higherEntry(value).getKey());
         return map.higherEntry(value).getValue();
     }
+
+    public void clear() {
+        map.clear();
+    }
 }

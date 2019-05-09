@@ -134,6 +134,7 @@ class GenerationHandler {
         for (int i = 0; i < selectionSize; i++) {
             individuals.add(randomCollection.next());
         }
+        randomCollection.clear();
     }
 
     private void tournamentSelection(int tournamentSize, int numberOfTournaments) {
