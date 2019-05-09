@@ -35,7 +35,7 @@ class GenerationLog {
         return generationsAverageFitness.get(generation) * fitnessListCurrentGeneration.size();
     }
 
-    private double getAverageFitnessIn(int generation) {
+    public double getAverageFitnessIn(int generation) {
         return generationsAverageFitness.get(generation);
     }
 

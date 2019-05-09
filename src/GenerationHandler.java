@@ -63,11 +63,12 @@ class GenerationHandler {
         log.printLogTxt(generation, dataset);
     }
 
-    void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType) {
+    void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType, int breakCondition) {
         this.newBloodAmount = newBloodAmount;
         this.selectionSize = generationSize / 2;
+        generation = 1;
 
-        for (generation = 1; generation < maxGenerations; generation++) {
+        while (generation < maxGenerations && improving(breakCondition)) {
 
             selection(selectType);
             crossover(crossoverRate);
@@ -76,12 +77,24 @@ class GenerationHandler {
 
             log.saveGeneration(individuals);
             log.printLogTxt(generation, dataset);
+
             //Warning: massive performance hit!!
             //createImageOfTheBestIn();
+
+            generation ++;
         }
         log.saveGeneration(individuals);
         log.printLogTxt(generation, dataset);
         log.crateImageOfBestIndividual(sequence.length());
+    }
+
+    private boolean improving(int referenceGen){
+        if (generation > referenceGen){
+            double referenceAvrg = log.getAverageFitnessIn(generation - 1 - referenceGen);
+            double currentAvrg = log.getAverageFitnessIn(generation - 1);
+            return !(currentAvrg < referenceAvrg);
+        }
+        return true;
     }
 
     private void selection(SelectType selectType) {
@@ -177,14 +190,16 @@ class GenerationHandler {
 
     }
 
-    //Todo: up for deletion?
     private void generateRandomCollection() {
         double overallFitness = log.getSumOfFintessIn(this.generation - 1);
+        double overallWeight = 0;
         for (Kette individual : individuals) {
             double weight = (individual.calcFitness() / overallFitness);
             weight = weight * 100;
+            //overallWeight += weight;
             randomCollection.add(weight, individual);
         }
+        //System.out.println("Overall weight in gen " + generation + " = " + overallWeight);
     }
 
     // todo: move somewhere else

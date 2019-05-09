@@ -36,5 +36,6 @@ class RandomCollection<E> {
 
     public void clear() {
         map.clear();
+        total = 0;
     }
 }
