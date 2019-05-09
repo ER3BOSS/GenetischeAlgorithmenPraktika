@@ -81,7 +81,7 @@ class GenerationHandler {
         }
         log.saveGeneration(individuals);
         log.printLogTxt(generation, dataset);
-        log.crateImageOfBestIndividual();
+        log.crateImageOfBestIndividual(sequence.length());
     }
 
     private void selection(SelectType selectType) {
@@ -156,6 +156,7 @@ class GenerationHandler {
         individuals.addAll(champions);
     }
 
+    // todo: make it create 1 or 2 children
     private void createChild() {
         int randA = ThreadLocalRandom.current().nextInt(0, selectionSize - 1);
         int randB = ThreadLocalRandom.current().nextInt(0, selectionSize - 1);
@@ -166,9 +167,12 @@ class GenerationHandler {
 
         //Do the crossover
         ArrayList<Integer> child = ChromosomeHandler.crossoverChromosome(chromosomeA, chromosomeB);
+        ArrayList<Integer> child2 = ChromosomeHandler.crossoverChromosome(chromosomeB, chromosomeA);
 
         //Save result
         individuals.add(ChromosomeHandler.chromosome2phenotype(child, sequence));
+        individuals.add(ChromosomeHandler.chromosome2phenotype(child2, sequence));
+
     }
 
     //Todo: up for deletion?
@@ -181,6 +185,7 @@ class GenerationHandler {
         }
     }
 
+    // todo: move somewhere else
     void drawResult(int top) { // top defines the best x you want the image of
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
         for (int i = 0; i < top; i++) {
