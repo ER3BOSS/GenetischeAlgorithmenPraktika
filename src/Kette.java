@@ -74,7 +74,7 @@ class Kette {
             int a_x = phenotype.get(i).getX();
             int a_y = phenotype.get(i).getY();
 
-            for (int j = 1; j < phenotype.size(); j++) {
+            for (int j = 0; j < phenotype.size(); j++) {
                 int b_x = phenotype.get(j).getX();
                 int b_y = phenotype.get(j).getY();
 
