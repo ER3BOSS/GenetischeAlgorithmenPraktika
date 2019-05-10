@@ -74,14 +74,14 @@ class Kette {
             int a_x = phenotype.get(i).getX();
             int a_y = phenotype.get(i).getY();
 
-            for (int j = 0; j < phenotype.size(); j++) {
+            for (int j = phenotype.size()-1; j >= 0; j--) {
                 int b_x = phenotype.get(j).getX();
                 int b_y = phenotype.get(j).getY();
 
                 int distance = getDistance(a_x, a_y, b_x, b_y);
 
                 if (distance > 2){
-                    j += distance - 1;
+                    j -= distance - 1;
                 }else if (a_x == b_x && a_y == b_y && phenotype.get(i) != phenotype.get(j)){
                     counter ++;
                 }
