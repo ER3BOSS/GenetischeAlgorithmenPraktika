@@ -70,20 +70,34 @@ class Kette {
 
     int calcOverlap(){
         int counter = 0;
-        for (Node nodeA : phenotype){
-            int a_x = nodeA.getX();
-            int a_y = nodeA.getY();
+        for (int i = 0; i < phenotype.size(); i++) {
+            int a_x = phenotype.get(i).getX();
+            int a_y = phenotype.get(i).getY();
 
-            for (Node nodeB : phenotype){
-                int b_x = nodeB.getX();
-                int b_y = nodeB.getY();
+            for (int j = 1; j < phenotype.size(); j++) {
+                int b_x = phenotype.get(j).getX();
+                int b_y = phenotype.get(j).getY();
 
-                if (a_x == b_x && a_y == b_y && nodeA != nodeB){
+                int distance = getDistance(a_x, a_y, b_x, b_y);
+
+                if (distance > 2){
+                    j += distance - 1;
+                }else if (a_x == b_x && a_y == b_y && phenotype.get(i) != phenotype.get(j)){
                     counter ++;
                 }
             }
         }
-        return counter / 2;
+        return counter/2;
+    }
+
+    private int getDistance(int a_x, int a_y, int b_x, int b_y) {
+        int distanceX = flipIfNegativ(a_x - b_x);
+        int distanceY = flipIfNegativ(a_y - b_y);
+        return distanceX + distanceY;
+    }
+
+    private int flipIfNegativ(int number){
+        return (number<0)?number*-1:number;
     }
 
     double calcFitness (){
