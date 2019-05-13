@@ -2,8 +2,6 @@ import java.io.IOException;
 
 
 class Main {
-
-
     public static void main(String[] args) throws IOException {
 
         String SEQMini = "1001"; //For testing purposes
@@ -14,6 +12,8 @@ class Main {
         String SEQ48 = "001001100110000011111111110000001100110010011111";
         String SEQ50 = "11010101011110100010001000010001000101111010101011";
 
+
+
         GenerationHandler generationHandler = new GenerationHandler(SEQ20);
         generationHandler.initializeGeneration(1000);
 
@@ -21,7 +21,7 @@ class Main {
                 500,
                 0,
                 0.1,
-                0.1,
+                0.25,
                 SelectType.FITNESS,
                 100
         );

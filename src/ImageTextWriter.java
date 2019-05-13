@@ -10,13 +10,9 @@ class ImageTextWriter {
         g2.setFont(font);
         int xMargin = 25;
         int yMarginTop = 40+fontSize/4; // just works ...
-
         g2.setColor(Color.BLACK);
 
-        String fitnessString = "Fitness: " + Double.toString(fitness).substring(0,4);
-        String overlapString = "Overlap: " + Integer.toString(overlap);
-        String minEnergyString = "Energy: " + Integer.toString(minEnergy);
-        String combinedString = fitnessString+" | "+overlapString+" | "+minEnergyString;
+        String combinedString = getCombinedString(fitness, overlap, minEnergy);
 
         if (StringFits(combinedString, g2, imageWidth, xMargin)){
             g2.drawString(combinedString, xMargin, yMarginTop);
@@ -26,7 +22,22 @@ class ImageTextWriter {
         }
     }
 
+    private static String getCombinedString(double fitness, int overlap, int minEnergy) {
+        String fitnessString = "Fitness: " + roundedFitnessString(fitness);
+        String overlapString = "Overlap: " + Integer.toString(overlap);
+        String minEnergyString = "Energy: " + Integer.toString(minEnergy);
+        return fitnessString+" | "+overlapString+" | "+minEnergyString;
+    }
+
     private static boolean StringFits(String combinedString, Graphics2D g2, int imageWidth, int xMargin) {
         return g2.getFontMetrics().stringWidth(combinedString)+xMargin*2 < imageWidth;
+    }
+
+    private static String roundedFitnessString(double fitness){ //Format is #.##
+        int value = Character.getNumericValue(Double.toString(fitness).charAt(5));
+        if (value > 5){ //round up
+            fitness += 0.01;
+        }
+        return Double.toString(fitness).substring(0,4);
     }
 }
