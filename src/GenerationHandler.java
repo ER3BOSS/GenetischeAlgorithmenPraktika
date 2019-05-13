@@ -200,8 +200,7 @@ class GenerationHandler {
         }
         //System.out.println("Overall weight in gen " + generation + " = " + overallWeight);
     }
-
-    // todo: move somewhere else
+    
     void drawResult(int top) { // top defines the best x you want the image of
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
         for (int i = 0; i < top; i++) {

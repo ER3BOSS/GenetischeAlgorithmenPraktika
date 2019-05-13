@@ -91,13 +91,9 @@ class Kette {
     }
 
     private int getDistance(int a_x, int a_y, int b_x, int b_y) {
-        int distanceX = flipIfNegativ(a_x - b_x);
-        int distanceY = flipIfNegativ(a_y - b_y);
+        int distanceX = Math.abs(a_x - b_x);
+        int distanceY = Math.abs(a_y - b_y);
         return distanceX + distanceY;
-    }
-
-    private int flipIfNegativ(int number){
-        return (number<0)?number*-1:number;
     }
 
     double calcFitness (){
