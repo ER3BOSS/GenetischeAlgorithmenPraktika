@@ -15,11 +15,15 @@ class ImageTextWriter {
         String combinedString = getCombinedString(fitness, overlap, minEnergy);
 
         if (StringFits(combinedString, g2, imageWidth, xMargin)){
-            g2.drawString(combinedString, xMargin, yMarginTop);
+            g2.drawString(combinedString, centerX(g2, imageWidth, xMargin, combinedString), yMarginTop);
         }else {//recursion with reduced font size
             int updatedFontSize = fontSize - fontSize / 10; //subtract one tenth
             writeDataToImage(g2,fitness,overlap,minEnergy,imageWidth, updatedFontSize);
         }
+    }
+
+    private static int centerX(Graphics2D g2, int imageWidth, int xMargin, String combinedString) {
+        return imageWidth/2-(g2.getFontMetrics().stringWidth(combinedString)+xMargin*2)/2+xMargin;
     }
 
     private static String getCombinedString(double fitness, int overlap, int minEnergy) {
@@ -34,10 +38,13 @@ class ImageTextWriter {
     }
 
     private static String roundedFitnessString(double fitness){ //Format is #.##
-        int value = Character.getNumericValue(Double.toString(fitness).charAt(5));
-        if (value > 5){ //round up
-            fitness += 0.01;
+        if (fitness < 0.01) {
+            int value = Character.getNumericValue(Double.toString(fitness).charAt(5));
+            if (value > 5) { //round up
+                fitness += 0.01;
+            }
+            return Double.toString(fitness).substring(0, 4);
         }
-        return Double.toString(fitness).substring(0,4);
+        return Double.toString(fitness);
     }
 }
