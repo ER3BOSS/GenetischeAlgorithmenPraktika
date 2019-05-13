@@ -27,7 +27,8 @@ class ImageTextWriter {
     }
 
     private static String getCombinedString(double fitness, int overlap, int minEnergy) {
-        String fitnessString = "Fitness: " + roundedFitnessString(fitness);
+        fitness = Math.round(fitness * 100.0) / 100.0;
+        String fitnessString = "Fitness: " + Double.toString(fitness);
         String overlapString = "Overlap: " + Integer.toString(overlap);
         String minEnergyString = "Energy: " + Integer.toString(minEnergy);
         return fitnessString+" | "+overlapString+" | "+minEnergyString;
@@ -35,16 +36,5 @@ class ImageTextWriter {
 
     private static boolean StringFits(String combinedString, Graphics2D g2, int imageWidth, int xMargin) {
         return g2.getFontMetrics().stringWidth(combinedString)+xMargin*2 < imageWidth;
-    }
-
-    private static String roundedFitnessString(double fitness){ //Format is #.##
-        if (fitness < 0.01) {
-            int value = Character.getNumericValue(Double.toString(fitness).charAt(5));
-            if (value > 5) { //round up
-                fitness += 0.01;
-            }
-            return Double.toString(fitness).substring(0, 4);
-        }
-        return Double.toString(fitness);
     }
 }
