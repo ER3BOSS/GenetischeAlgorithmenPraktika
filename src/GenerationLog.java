@@ -74,7 +74,12 @@ class GenerationLog {
 
     void crateImageOfBestIndividual(int sequenzSize){
         ImageCreator imageCreator = new ImageCreator();
-        imageCreator.createImage(bestIndividual.getPhenotype(), "!BestIndividual_S" + sequenzSize + ".png");
+        imageCreator.createImage(
+                bestIndividual.getPhenotype(),
+                bestIndividual.calcFitness(),
+                bestIndividual.calcOverlap(),
+                bestIndividual.calcMinEnergy(),
+                "!BestIndividual_S" + sequenzSize + ".png");
         bestIndividual.printValues();
     }
 }

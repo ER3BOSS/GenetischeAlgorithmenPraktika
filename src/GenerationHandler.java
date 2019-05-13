@@ -205,7 +205,7 @@ class GenerationHandler {
     void drawResult(int top) { // top defines the best x you want the image of
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
         for (int i = 0; i < top; i++) {
-            imageCreator.createImage(individuals.get(i).getPhenotype(), Integer.toString(i) + ".png");
+            imageCreator.createImage(individuals.get(i).getPhenotype(), individuals.get(i).calcFitness(), individuals.get(i).calcOverlap(), individuals.get(i).calcMinEnergy(), Integer.toString(i) + ".png");
             System.out.println();
             individuals.get(i).printValues();
         }
@@ -213,7 +213,7 @@ class GenerationHandler {
 
     private void createImageOfTheBestIn() {
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
-        imageCreator.createImage(individuals.get(0).getPhenotype(), "Generation_" + Integer.toString(this.generation) + ".png");
+        imageCreator.createImage(individuals.get(0).getPhenotype(), individuals.get(0).calcFitness(), individuals.get(0).calcOverlap(), individuals.get(0).calcMinEnergy(), "Generation_" + Integer.toString(this.generation) + ".png");
         //System.out.println();
         //individuals.get(0).printValues();
     }
