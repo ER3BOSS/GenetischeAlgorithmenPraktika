@@ -32,7 +32,8 @@ class ImageCreator {
 
         drawNodes(g2, startX, startY); //each node also draws an index and a line
 
-        ImageTextWriter.writeDataToImage(g2,fitness,overlap,minEnergy,width,height);
+        //write log data on image
+        ImageTextWriter.writeDataToImage(g2,fitness,overlap,minEnergy,width,60);
 
         //create folder
         String folder = "/ga";

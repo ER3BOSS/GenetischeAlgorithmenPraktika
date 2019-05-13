@@ -6,7 +6,8 @@ class Main {
 
     public static void main(String[] args) throws IOException {
 
-        String SEQ20 = "1010011010";
+        String SEQMini = "1001"; //For testing purposes
+        String SEQ20 = "10100110100101100101";
         String SEQ24 = "110010010010010010010011";
         String SEQ25 = "0010011000011000011000011";
         String SEQ36 = "000110011000001111111001100001100100";
