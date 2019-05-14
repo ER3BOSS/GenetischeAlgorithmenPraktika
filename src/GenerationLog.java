@@ -20,13 +20,13 @@ class GenerationLog {
 
     void saveGeneration(List<Kette> individuals) {
         fitnessListCurrentGeneration.clear();
-        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.getFitness(),ketteA.getFitness()));
         generationsBestIndividual.add(individuals.get(0));
-        if(this.bestIndividual.calcFitness() < individuals.get(0).calcFitness())
+        if(this.bestIndividual.getFitness() < individuals.get(0).getFitness())
         this.bestIndividual = individuals.get(0);
 
         for (Kette individual : individuals) {
-            fitnessListCurrentGeneration.add(individual.calcFitness());
+            fitnessListCurrentGeneration.add(individual.getFitness());
         }
         generationsAverageFitness.add(calcAverageFitness());
     }
@@ -55,13 +55,13 @@ class GenerationLog {
     void printLogTxt(int generation, DefaultCategoryDataset dataset){
         try (PrintWriter out = new PrintWriter(new FileWriter(new File("/ga" + File.separator +"!Log.txt"),true))) {
             out.print((Integer.toString(generation) + "," + getAverageFitnessIn(generation)) + "," +
-                    getGenerationsBestFitnessIn(generation) + "," + bestIndividual.calcFitness() + "," +
+                    getGenerationsBestFitnessIn(generation).getFitness() + "," + bestIndividual.getFitness() + "," +
                     bestIndividual.calcMinEnergy() + "," + bestIndividual.calcOverlap());
 
             out.print("\n");
 
-            dataset.addValue(getGenerationsBestFitnessIn(generation).calcFitness() , "current best" , Integer.toString(generation));
-            dataset.addValue(bestIndividual.calcFitness() , "overall best" , Integer.toString(generation));
+            dataset.addValue(getGenerationsBestFitnessIn(generation).getFitness() , "current best" , Integer.toString(generation));
+            dataset.addValue(bestIndividual.getFitness() , "overall best" , Integer.toString(generation));
             dataset.addValue(getAverageFitnessIn(generation) , "average" , Integer.toString(generation));
 
         }catch (java.io.IOException e){
