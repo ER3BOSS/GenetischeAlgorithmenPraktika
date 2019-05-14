@@ -23,6 +23,7 @@ class GenerationHandler {
     private int selectionSize = 0;
     private double explorationFactor = 0;
     private ArrayList<Integer> challengerList = new ArrayList<>();
+    private int maxGenerations = 0;
 
 
     GenerationHandler(String sequence) throws IOException {
@@ -67,11 +68,12 @@ class GenerationHandler {
     }
 
     void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType, int breakCondition) {
+        this.maxGenerations = maxGenerations;
         this.newBloodAmount = newBloodAmount;
         this.selectionSize = generationSize / 2;
         generation = 1;
 
-        while (generation < maxGenerations && improving(breakCondition)) {
+        while (generation < this.maxGenerations && improving(breakCondition)) {
 
             selection(selectType);
             crossover(crossoverRate);
@@ -93,9 +95,18 @@ class GenerationHandler {
     }
 
     private void exploration(int mutationFactor) {
-        if (generation > 100 && !improving(mutationFactor ) && explorationFactor < 0.5) {
-            explorationFactor += 0.001;
-            System.out.println("Exploration: " + explorationFactor);
+        if (generation > maxGenerations / 10) {
+            double averageRate = log.getAverageFitnessIn(generation -1) / log.getAverageFitnessIn(generation - mutationFactor);
+            if (averageRate < 1 && explorationFactor < 0.1){
+                explorationFactor += 0.001;
+                System.out.println(averageRate);
+                System.out.println("Exploration: " + explorationFactor);
+            }
+            else if (averageRate > 1.1 && explorationFactor > -0.1){
+                explorationFactor -= 0.001;
+                System.out.println(averageRate);
+                System.out.println("Exploration: " + explorationFactor);
+            }
             }
     }
 
