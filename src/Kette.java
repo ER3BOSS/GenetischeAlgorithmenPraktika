@@ -101,7 +101,7 @@ class Kette {
         double countOfPairs = calcMinEnergy()+1;
         double countOfOverlap = calcOverlap()+1;
 
-        return (countOfPairs/countOfOverlap);
+        return (countOfPairs/countOfOverlap * 100000000);
     }
 
     void printValues(){

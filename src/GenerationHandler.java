@@ -21,6 +21,7 @@ class GenerationHandler {
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     private GenerationLog log = new GenerationLog();
     private int selectionSize = 0;
+    private double explorationFactor = 0;
 
     GenerationHandler(String sequence) throws IOException {
         this.sequence = sequence;
@@ -63,7 +64,7 @@ class GenerationHandler {
         log.printLogTxt(generation, dataset);
     }
 
-    void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double mutationFactor, double crossoverRate, SelectType selectType, int breakCondition) {
+    void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType, int breakCondition) {
         this.newBloodAmount = newBloodAmount;
         this.selectionSize = generationSize / 2;
         generation = 1;
@@ -72,6 +73,7 @@ class GenerationHandler {
 
             selection(selectType);
             crossover(crossoverRate);
+            exploration(breakCondition / 10);
             mutation(mutationRate);
             makeSomeNewBlood();
 
@@ -86,6 +88,13 @@ class GenerationHandler {
         log.saveGeneration(individuals);
         log.printLogTxt(generation, dataset);
         log.crateImageOfBestIndividual(sequence.length());
+    }
+
+    private void exploration(int mutationFactor) {
+        if (generation > 100 && !improving(mutationFactor ) && explorationFactor < 0.5) {
+            explorationFactor += 0.001;
+            System.out.println("Exploration: " + explorationFactor);
+            }
     }
 
     private boolean improving(int referenceGen){
@@ -115,12 +124,11 @@ class GenerationHandler {
         }
     }
 
-    //Todo: make altering the mutation rate somewhat convenient
     private void mutation(double rate) {
         int initialPop = individuals.size();
         // fill the generationSize while leaving space for newBlood also no need to do that in the last gen
         while (individuals.size() < (generationSize - newBloodAmount)) {
-            createMutant(rate, initialPop);
+            createMutant(rate + explorationFactor, initialPop);
         }
     }
 

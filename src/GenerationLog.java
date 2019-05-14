@@ -16,12 +16,12 @@ class GenerationLog {
     private Kette bestIndividual = new Kette("");
     private List<Double> fitnessListCurrentGeneration = new ArrayList<>();
     private List<Double> generationsAverageFitness = new ArrayList<>();
-    private List<Double> generationsBestFitness = new ArrayList<>();
+    private List<Kette> generationsBestIndividual = new ArrayList<>();
 
     void saveGeneration(List<Kette> individuals) {
         fitnessListCurrentGeneration.clear();
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
-        generationsBestFitness.add(individuals.get(0).calcFitness());
+        generationsBestIndividual.add(individuals.get(0));
         if(this.bestIndividual.calcFitness() < individuals.get(0).calcFitness())
         this.bestIndividual = individuals.get(0);
 
@@ -39,8 +39,8 @@ class GenerationLog {
         return generationsAverageFitness.get(generation);
     }
 
-    private double getGenerationsBestFitnessIn(int generation) {
-        return generationsBestFitness.get(generation);
+    private Kette getGenerationsBestFitnessIn(int generation) {
+        return generationsBestIndividual.get(generation);
     }
 
     private Double calcAverageFitness(){
@@ -60,7 +60,7 @@ class GenerationLog {
 
             out.print("\n");
 
-            dataset.addValue(getGenerationsBestFitnessIn(generation) , "current best" , Integer.toString(generation));
+            dataset.addValue(getGenerationsBestFitnessIn(generation).calcFitness() , "current best" , Integer.toString(generation));
             dataset.addValue(bestIndividual.calcFitness() , "overall best" , Integer.toString(generation));
             dataset.addValue(getAverageFitnessIn(generation) , "average" , Integer.toString(generation));
 
@@ -68,7 +68,7 @@ class GenerationLog {
             System.out.println("Log file not found");
         }
         System.out.print(MessageFormat.format("Generation: {0} \t Average: {1} \t Best: {2} \t Energy: {3} \n", Integer.toString(generation),
-                Double.toString(getAverageFitnessIn(generation)), Double.toString(getGenerationsBestFitnessIn(generation)), Integer.toString(bestIndividual.calcMinEnergy())));
+                Double.toString(getAverageFitnessIn(generation)), Double.toString(getGenerationsBestFitnessIn(generation).calcFitness()), Integer.toString(getGenerationsBestFitnessIn(generation).calcMinEnergy())));
 
     }
 

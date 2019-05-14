@@ -14,17 +14,16 @@ class Main {
 
 
 
-        GenerationHandler generationHandler = new GenerationHandler(SEQ20);
-        generationHandler.initializeGeneration(1000);
+        GenerationHandler generationHandler = new GenerationHandler(SEQ50);
+        generationHandler.initializeGeneration(600);
 
         generationHandler.evolve(
-                500,
+                100,
                 0,
                 0.1,
                 0.1,
-                20,
-                SelectType.TOURNAMENT,
-                100
+                SelectType.FITNESS,
+                250
         );
 
         generationHandler.drawResult(0);
