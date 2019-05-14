@@ -18,12 +18,12 @@ class Main {
         generationHandler.initializeGeneration(600);
 
         generationHandler.evolve(
-                100,
+                1000,
                 0,
                 0.1,
                 0.1,
                 SelectType.FITNESS,
-                250
+                100
         );
 
         generationHandler.drawResult(0);

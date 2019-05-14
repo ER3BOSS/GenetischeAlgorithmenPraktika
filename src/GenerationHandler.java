@@ -170,8 +170,8 @@ class GenerationHandler {
             for (int j = 0; j < tournamentSize; j++) {
                 int random = getNextChallenger(individuals.size());
                 Kette challenger = individuals.get(random);
-                if (challenger.calcFitness() > bestFoundFitness) {
-                    bestFoundFitness = challenger.calcFitness();
+                if (challenger.getFitness() > bestFoundFitness) {
+                    bestFoundFitness = challenger.getFitness();
                     champion = challenger;
                 }
             }
@@ -224,7 +224,7 @@ class GenerationHandler {
         double overallFitness = log.getSumOfFintessIn(this.generation - 1);
         double overallWeight = 0;
         for (Kette individual : individuals) {
-            double weight = (individual.calcFitness() / overallFitness);
+            double weight = (individual.getFitness() / overallFitness);
             weight = weight * 100;
             //overallWeight += weight;
             randomCollection.add(weight, individual);
@@ -233,17 +233,17 @@ class GenerationHandler {
     }
     
     void drawResult(int top) { // top defines the best x you want the image of
-        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.getFitness(), ketteA.getFitness()));
         for (int i = 0; i < top; i++) {
-            imageCreator.createImage(individuals.get(i).getPhenotype(), individuals.get(i).calcFitness(), individuals.get(i).calcOverlap(), individuals.get(i).calcMinEnergy(), i + ".png");
+            imageCreator.createImage(individuals.get(i).getPhenotype(), individuals.get(i).getFitness(), individuals.get(i).calcOverlap(), individuals.get(i).calcMinEnergy(), i + ".png");
             System.out.println();
             //individuals.get(i).printValues();
         }
     }
 
     private void createImageOfTheBestIn() {
-        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
-        imageCreator.createImage(individuals.get(0).getPhenotype(), individuals.get(0).calcFitness(), individuals.get(0).calcOverlap(), individuals.get(0).calcMinEnergy(), "Generation_" + this.generation + ".png");
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.getFitness(), ketteA.getFitness()));
+        imageCreator.createImage(individuals.get(0).getPhenotype(), individuals.get(0).getFitness(), individuals.get(0).calcOverlap(), individuals.get(0).calcMinEnergy(), "Generation_" + this.generation + ".png");
         //System.out.println();
         //individuals.get(0).printValues();
     }

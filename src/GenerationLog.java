@@ -35,7 +35,7 @@ class GenerationLog {
         return generationsAverageFitness.get(generation) * fitnessListCurrentGeneration.size();
     }
 
-    public double getAverageFitnessIn(int generation) {
+    double getAverageFitnessIn(int generation) {
         return generationsAverageFitness.get(generation);
     }
 
@@ -54,7 +54,7 @@ class GenerationLog {
 
     void printLogTxt(int generation, DefaultCategoryDataset dataset){
         try (PrintWriter out = new PrintWriter(new FileWriter(new File("/ga" + File.separator +"!Log.txt"),true))) {
-            out.print((Integer.toString(generation) + "," + getAverageFitnessIn(generation)) + "," +
+            out.print((generation + "," + getAverageFitnessIn(generation)) + "," +
                     getGenerationsBestFitnessIn(generation).getFitness() + "," + bestIndividual.getFitness() + "," +
                     bestIndividual.calcMinEnergy() + "," + bestIndividual.calcOverlap());
 
@@ -68,7 +68,7 @@ class GenerationLog {
             System.out.println("Log file not found");
         }
         System.out.print(MessageFormat.format("Generation: {0} \t Average: {1} \t Best: {2} \t Energy: {3} \n", Integer.toString(generation),
-                Double.toString(getAverageFitnessIn(generation)), Double.toString(getGenerationsBestFitnessIn(generation).calcFitness()), Integer.toString(getGenerationsBestFitnessIn(generation).calcMinEnergy())));
+                Double.toString(getAverageFitnessIn(generation)), Double.toString(getGenerationsBestFitnessIn(generation).getFitness()), Integer.toString(getGenerationsBestFitnessIn(generation).calcMinEnergy())));
 
     }
 
@@ -76,7 +76,7 @@ class GenerationLog {
         ImageCreator imageCreator = new ImageCreator();
         imageCreator.createImage(
                 bestIndividual.getPhenotype(),
-                bestIndividual.calcFitness(),
+                bestIndividual.getFitness(),
                 bestIndividual.calcOverlap(),
                 bestIndividual.calcMinEnergy(),
                 "!BestIndividual_S" + sequenzSize + ".png");

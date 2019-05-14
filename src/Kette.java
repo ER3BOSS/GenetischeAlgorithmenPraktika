@@ -18,6 +18,7 @@ class Kette {
     Kette(String new_string, ArrayList<Node> phenotype) {
         kette = new_string;
         this.phenotype = phenotype;
+        calcFitness();
     }
 
     ArrayList<Node> getPhenotype() {
@@ -28,17 +29,17 @@ class Kette {
         while (phenotype.size() == 0) // 0 means returned graph is invalid
             phenotype = random2DGenerator.generateRandomGraphNoOverlap(kette);
 
-        fitness = calcFitness();
+        calcFitness();
     }
 
     void generateByRng(){
         phenotype = random2DGenerator.generateRandomGraph(kette);
-        fitness = calcFitness();
+        calcFitness();
     }
 
     void generateByIntelligentRng(){
         phenotype = random2DGenerator.generateIntelligentRandomGraph(kette);
-        fitness = calcFitness();
+        calcFitness();
     }
 
     int calcMinEnergy() {
@@ -96,22 +97,22 @@ class Kette {
         return distanceX + distanceY;
     }
 
-    double calcFitness (){
+    void calcFitness (){
         //both cant be 0, otherwise it screws with the calculation
         double countOfPairs = calcMinEnergy()+1;
         double countOfOverlap = calcOverlap()+1;
 
-        return (countOfPairs/countOfOverlap*10);
+        this.fitness = (countOfPairs/countOfOverlap*10);
     }
 
     void printValues(){
         System.out.println();
         System.out.println("Minimale Energie: " + calcMinEnergy());
         System.out.println("Overlap: " + calcOverlap());
-        System.out.println("Fitness: " + calcFitness());
+        System.out.println("Fitness: " + getFitness());
     }
 
-    public double getFitness() {
+    double getFitness() {
         return fitness;
     }
 }
