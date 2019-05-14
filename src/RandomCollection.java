@@ -2,10 +2,6 @@ import java.util.NavigableMap;
 import java.util.Random;
 import java.util.TreeMap;
 
-// see https://stackoverflow.com/questions/6409652/random-weighted-selection-in-java
-
-//class not used atm
-
 class RandomCollection<E> {
     private final NavigableMap<Double, E> map = new TreeMap<>();
     private final Random random;
@@ -34,7 +30,7 @@ class RandomCollection<E> {
         //return map.higherEntry(value).getValue();
     }
 
-    public void clear() {
+    void clear() {
         map.clear();
         total = 0;
     }

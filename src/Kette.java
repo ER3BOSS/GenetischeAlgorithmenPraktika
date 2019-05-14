@@ -100,9 +100,9 @@ class Kette {
     void calcFitness (){
         //both cant be 0, otherwise it screws with the calculation
         double countOfPairs = calcMinEnergy()+1;
-        double countOfOverlap = calcOverlap()+1;
+        double countOfOverlap = calcOverlap();
 
-        this.fitness = (countOfPairs/countOfOverlap*10);
+        this.fitness = (countOfPairs/(Math.pow(countOfOverlap,2)+1));
     }
 
     void printValues(){
