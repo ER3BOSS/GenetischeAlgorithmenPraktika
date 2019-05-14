@@ -63,7 +63,7 @@ class GenerationHandler {
         log.printLogTxt(generation, dataset);
     }
 
-    void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType, int breakCondition) {
+    void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double mutationFactor, double crossoverRate, SelectType selectType, int breakCondition) {
         this.newBloodAmount = newBloodAmount;
         this.selectionSize = generationSize / 2;
         generation = 1;
