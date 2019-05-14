@@ -21,6 +21,8 @@ class GenerationHandler {
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     private GenerationLog log = new GenerationLog();
     private int selectionSize = 0;
+    private ArrayList<Integer> challengerList = new ArrayList<>();
+
 
     GenerationHandler(String sequence) throws IOException {
         this.sequence = sequence;
@@ -63,7 +65,7 @@ class GenerationHandler {
         log.printLogTxt(generation, dataset);
     }
 
-    void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double mutationFactor, double crossoverRate, SelectType selectType, int breakCondition) {
+    void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType, int breakCondition) {
         this.newBloodAmount = newBloodAmount;
         this.selectionSize = generationSize / 2;
         generation = 1;
@@ -115,7 +117,6 @@ class GenerationHandler {
         }
     }
 
-    //Todo: make altering the mutation rate somewhat convenient
     private void mutation(double rate) {
         int initialPop = individuals.size();
         // fill the generationSize while leaving space for newBlood also no need to do that in the last gen
@@ -156,7 +157,7 @@ class GenerationHandler {
         for (int i = 0; i < numberOfTournaments; i++) {
             double bestFoundFitness = 0;
             for (int j = 0; j < tournamentSize; j++) {
-                int random = ThreadLocalRandom.current().nextInt(0, individuals.size() - 1);
+                int random = getNextChallenger(individuals.size());
                 Kette challenger = individuals.get(random);
                 if (challenger.calcFitness() > bestFoundFitness) {
                     bestFoundFitness = challenger.calcFitness();
@@ -164,10 +165,29 @@ class GenerationHandler {
                 }
             }
             champions.add(champion);
+            challengerList.clear();
         }
         individuals.clear();
 
         individuals.addAll(champions);
+    }
+
+    private int getNextChallenger(int size) {
+        int selected;
+        do {
+            selected = ThreadLocalRandom.current().nextInt(0, size - 1);
+        }while (isNotAllreadyChallenging(selected, challengerList));
+        challengerList.add(selected);
+        return selected;
+    }
+
+    private boolean isNotAllreadyChallenging(int selected, ArrayList<Integer> challengerList) {
+        for (int challenger : challengerList){
+            if (selected == challenger){
+                return true;
+            }
+        }
+        return false;
     }
 
     // todo: make it create 1 or 2 children
@@ -204,7 +224,7 @@ class GenerationHandler {
     void drawResult(int top) { // top defines the best x you want the image of
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
         for (int i = 0; i < top; i++) {
-            imageCreator.createImage(individuals.get(i).getPhenotype(), individuals.get(i).calcFitness(), individuals.get(i).calcOverlap(), individuals.get(i).calcMinEnergy(), Integer.toString(i) + ".png");
+            imageCreator.createImage(individuals.get(i).getPhenotype(), individuals.get(i).calcFitness(), individuals.get(i).calcOverlap(), individuals.get(i).calcMinEnergy(), i + ".png");
             System.out.println();
             individuals.get(i).printValues();
         }
@@ -212,7 +232,7 @@ class GenerationHandler {
 
     private void createImageOfTheBestIn() {
         individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
-        imageCreator.createImage(individuals.get(0).getPhenotype(), individuals.get(0).calcFitness(), individuals.get(0).calcOverlap(), individuals.get(0).calcMinEnergy(), "Generation_" + Integer.toString(this.generation) + ".png");
+        imageCreator.createImage(individuals.get(0).getPhenotype(), individuals.get(0).calcFitness(), individuals.get(0).calcOverlap(), individuals.get(0).calcMinEnergy(), "Generation_" + this.generation + ".png");
         //System.out.println();
         //individuals.get(0).printValues();
     }
