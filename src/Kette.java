@@ -70,26 +70,38 @@ class Kette {
 
     int calcOverlap(){
         int counter = 0;
-        for (Node nodeA : phenotype){
-            int a_x = nodeA.getX();
-            int a_y = nodeA.getY();
+        for (int i = 0; i < phenotype.size(); i++) {
+            int a_x = phenotype.get(i).getX();
+            int a_y = phenotype.get(i).getY();
 
-            for (Node nodeB : phenotype){
-                int b_x = nodeB.getX();
-                int b_y = nodeB.getY();
+            for (int j = phenotype.size()-1; j >= 0; j--) {
+                int b_x = phenotype.get(j).getX();
+                int b_y = phenotype.get(j).getY();
 
-                if (a_x == b_x && a_y == b_y && nodeA != nodeB){
+                int distance = getDistance(a_x, a_y, b_x, b_y);
+
+                if (distance > 2){
+                    j -= distance - 1;
+                }else if (a_x == b_x && a_y == b_y && phenotype.get(i) != phenotype.get(j)){
                     counter ++;
                 }
             }
         }
-        return counter / 2;
+        return counter/2;
+    }
+
+    private int getDistance(int a_x, int a_y, int b_x, int b_y) {
+        int distanceX = Math.abs(a_x - b_x);
+        int distanceY = Math.abs(a_y - b_y);
+        return distanceX + distanceY;
     }
 
     double calcFitness (){
-        double countOfPairs = calcMinEnergy();
-        double countOfOverlap = calcOverlap();
-        return (((1 + countOfPairs)* 7.55) / ((1 + countOfOverlap) * 12.21));
+        //both cant be 0, otherwise it screws with the calculation
+        double countOfPairs = calcMinEnergy()+1;
+        double countOfOverlap = calcOverlap()+1;
+
+        return (countOfPairs/countOfOverlap);
     }
 
     void printValues(){

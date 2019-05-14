@@ -10,7 +10,7 @@ class ImageCreator {
     private int cellSize = 80;
     private ArrayList<Node> phenotype = new ArrayList<>();
 
-    void createImage(ArrayList<Node> phenotype, String filename) {
+    void createImage(ArrayList<Node> phenotype, double fitness, int overlap, int minEnergy, String filename) {
 
         this.phenotype = phenotype;
 
@@ -31,6 +31,9 @@ class ImageCreator {
         g2.fillRect(0, 0, width, height);
 
         drawNodes(g2, startX, startY); //each node also draws an index and a line
+
+        //write log data on image
+        ImageTextWriter.writeDataToImage(g2,fitness,overlap,minEnergy,width,60);
 
         //create folder
         String folder = "/ga";
