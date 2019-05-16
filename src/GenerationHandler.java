@@ -70,16 +70,16 @@ class GenerationHandler {
     void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType, int breakCondition) {
         this.maxGenerations = maxGenerations;
         this.newBloodAmount = newBloodAmount;
-        this.selectionSize = generationSize / 2;
+        this.selectionSize = generationSize;
         generation = 1;
 
-        while (generation < this.maxGenerations && improving(breakCondition)) {
+        while (generation < this.maxGenerations) { //&& improving(breakCondition)
 
             selection(selectType);
             crossover(crossoverRate);
-            exploration(breakCondition / 10);
+            //exploration(breakCondition / 10);
             mutation(mutationRate);
-            makeSomeNewBlood();
+            //makeSomeNewBlood();
 
             log.saveGeneration(individuals);
             log.printLogTxt(generation, dataset);
@@ -95,14 +95,14 @@ class GenerationHandler {
     }
 
     private void exploration(int mutationFactor) {
-        if (generation > maxGenerations / 10) {
+        if (generation > maxGenerations / 10 && (generation % 10) == 0) {
             double averageRate = log.getAverageFitnessIn(generation -1) / log.getAverageFitnessIn(generation - mutationFactor);
-            if (averageRate < 1 && explorationFactor < 0.1){
+            if ( averageRate > 0.9 && averageRate < 1 && explorationFactor < 0.1){
                 explorationFactor += 0.001;
                 System.out.println(averageRate);
                 System.out.println("Exploration: " + explorationFactor);
             }
-            else if (averageRate > 1.1 && explorationFactor > -0.1){
+            else if ((averageRate < 0.9 || averageRate > 1.1) && explorationFactor > -0.1){
                 explorationFactor -= 0.001;
                 System.out.println(averageRate);
                 System.out.println("Exploration: " + explorationFactor);
@@ -132,25 +132,29 @@ class GenerationHandler {
     }
 
     private void crossover(double rate) {
-        for (int i = 0; i < generationSize * rate; i++) {
-            createChild();
+        int one = -1;
+        for (int i = 0; i < generationSize; i++) {
+            double random = Math.random();
+            if (one != -1) {
+                createChild(one, i);
+                one = -1;
+            } else if (random <= rate) {
+                one = i;
+            }
         }
     }
 
     //Todo: make altering the mutation rate somewhat convenient
     private void mutation(double rate) {
-        int initialPop = individuals.size();
-        // fill the generationSize while leaving space for newBlood also no need to do that in the last gen
-        while (individuals.size() < (generationSize - newBloodAmount)) {
-            createMutant(rate + explorationFactor, initialPop);
+        for (int i = 0; i < individuals.size(); i++){
+            createMutant(rate + explorationFactor, i);
         }
     }
 
-    private void createMutant(double rate, int initialPop) {
-        int randomNum = ThreadLocalRandom.current().nextInt(0, initialPop);
-        ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(randomNum).getPhenotype());
+    private void createMutant(double rate, int target) {
+        ArrayList<Integer> chromosomeMutant = ChromosomeHandler.extractChromosome(individuals.get(target).getPhenotype());
         ArrayList<Integer> mutant = ChromosomeHandler.mutateChromosome(chromosomeMutant, rate);
-        individuals.add(ChromosomeHandler.chromosome2phenotype(mutant, sequence));
+        individuals.set(target, ChromosomeHandler.chromosome2phenotype(mutant, sequence));
     }
 
     private void makeSomeNewBlood() {
@@ -213,21 +217,18 @@ class GenerationHandler {
     }
 
     // todo: make it create 1 or 2 children
-    private void createChild() {
-        int randA = ThreadLocalRandom.current().nextInt(0, selectionSize - 1);
-        int randB = ThreadLocalRandom.current().nextInt(0, selectionSize - 1);
-
+    private void createChild(int one, int two) {
         //get Chromosome
-        ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(randA).getPhenotype());
-        ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(randB).getPhenotype());
+        ArrayList<Integer> chromosomeA = ChromosomeHandler.extractChromosome(individuals.get(one).getPhenotype());
+        ArrayList<Integer> chromosomeB = ChromosomeHandler.extractChromosome(individuals.get(two).getPhenotype());
 
         //Do the crossover
         ArrayList<Integer> child = ChromosomeHandler.crossoverChromosome(chromosomeA, chromosomeB);
         ArrayList<Integer> child2 = ChromosomeHandler.crossoverChromosome(chromosomeB, chromosomeA);
 
         //Save result
-        individuals.add(ChromosomeHandler.chromosome2phenotype(child, sequence));
-        individuals.add(ChromosomeHandler.chromosome2phenotype(child2, sequence));
+        individuals.set(one, ChromosomeHandler.chromosome2phenotype(child, sequence));
+        individuals.set(two, ChromosomeHandler.chromosome2phenotype(child2, sequence));
 
     }
 

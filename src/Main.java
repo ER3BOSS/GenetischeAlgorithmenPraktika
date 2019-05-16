@@ -15,15 +15,15 @@ class Main {
 
 
         GenerationHandler generationHandler = new GenerationHandler(SEQ50);
-        generationHandler.initializeGeneration(600);
+        generationHandler.initializeGeneration(5000);
 
         generationHandler.evolve(
                 1000,
                 0,
-                0.1,
+                0.01,
                 0.1,
                 SelectType.FITNESS,
-                100
+                400
         );
 
         generationHandler.drawResult(0);
