@@ -20,7 +20,6 @@ class GenerationHandler {
     private int newBloodAmount = 0;
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     private GenerationLog log = new GenerationLog();
-    private int selectionSize = 0;
     private double explorationFactor = 0;
     private ArrayList<Integer> challengerList = new ArrayList<>();
     private int maxGenerations = 0;
@@ -70,16 +69,15 @@ class GenerationHandler {
     void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType, int breakCondition) {
         this.maxGenerations = maxGenerations;
         this.newBloodAmount = newBloodAmount;
-        this.selectionSize = generationSize;
         generation = 1;
 
         while (generation < this.maxGenerations) { //&& improving(breakCondition)
 
             selection(selectType);
+            makeSomeNewBlood();
             crossover(crossoverRate);
             exploration();
             mutation(mutationRate);
-            //makeSomeNewBlood();
 
             log.saveGeneration(individuals);
             log.printLogTxt(generation, dataset);
@@ -115,10 +113,10 @@ class GenerationHandler {
         // selection Process
         switch (selectType){
             case FITNESS:
-                fitnessBiasedSelection(selectionSize);
+                fitnessBiasedSelection(generationSize - newBloodAmount);
                 break;
             case TOURNAMENT:
-                tournamentSelection(4, selectionSize);
+                tournamentSelection(4, generationSize);
                 break;
         }
     }
@@ -158,12 +156,12 @@ class GenerationHandler {
     }
 
     // Program freezes if selection is bigger than generation Size
-    private void fitnessBiasedSelection(int selectionSize) {
+    private void fitnessBiasedSelection(int generationSize) {
         generateRandomCollection();
 
         individuals.clear();
 
-        for (int i = 0; i < selectionSize; i++) {
+        for (int i = 0; i < generationSize; i++) {
             individuals.add(randomCollection.next());
         }
         randomCollection.clear();

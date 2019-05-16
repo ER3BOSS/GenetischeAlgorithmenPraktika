@@ -19,7 +19,7 @@ class Main {
 
         generationHandler.evolve(
                 1000,
-                0,
+                1,
                 0.01,
                 0.1,
                 SelectType.FITNESS,
