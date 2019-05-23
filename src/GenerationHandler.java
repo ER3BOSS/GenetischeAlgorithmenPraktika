@@ -21,6 +21,10 @@ class GenerationHandler {
     private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     private GenerationLog log = new GenerationLog();
     private int selectionSize = 0;
+    private double explorationFactor = 0;
+    private ArrayList<Integer> challengerList = new ArrayList<>();
+    private int maxGenerations = 0;
+
 
     GenerationHandler(String sequence) throws IOException {
         this.sequence = sequence;
@@ -64,14 +68,16 @@ class GenerationHandler {
     }
 
     void evolve(int maxGenerations, int newBloodAmount, double mutationRate, double crossoverRate, SelectType selectType, int breakCondition) {
+        this.maxGenerations = maxGenerations;
         this.newBloodAmount = newBloodAmount;
         this.selectionSize = generationSize / 2;
         generation = 1;
 
-        while (generation < maxGenerations && improving(breakCondition)) {
+        while (generation < this.maxGenerations && improving(breakCondition)) {
 
             selection(selectType);
             crossover(crossoverRate);
+            exploration(breakCondition / 10);
             mutation(mutationRate);
             makeSomeNewBlood();
 
@@ -86,6 +92,22 @@ class GenerationHandler {
         log.saveGeneration(individuals);
         log.printLogTxt(generation, dataset);
         log.crateImageOfBestIndividual(sequence.length());
+    }
+
+    private void exploration(int mutationFactor) {
+        if (generation > maxGenerations / 10) {
+            double averageRate = log.getAverageFitnessIn(generation -1) / log.getAverageFitnessIn(generation - mutationFactor);
+            if (averageRate < 1 && explorationFactor < 0.1){
+                explorationFactor += 0.001;
+                System.out.println(averageRate);
+                System.out.println("Exploration: " + explorationFactor);
+            }
+            else if (averageRate > 1.1 && explorationFactor > -0.1){
+                explorationFactor -= 0.001;
+                System.out.println(averageRate);
+                System.out.println("Exploration: " + explorationFactor);
+            }
+            }
     }
 
     private boolean improving(int referenceGen){
@@ -120,7 +142,7 @@ class GenerationHandler {
         int initialPop = individuals.size();
         // fill the generationSize while leaving space for newBlood also no need to do that in the last gen
         while (individuals.size() < (generationSize - newBloodAmount)) {
-            createMutant(rate, initialPop);
+            createMutant(rate + explorationFactor, initialPop);
         }
     }
 
@@ -139,7 +161,8 @@ class GenerationHandler {
         }
     }
 
-    private void fitnessBiasedSelection(int selectionSize) { //Programm freezes if selection is bigger than generation Size
+    // Program freezes if selection is bigger than generation Size
+    private void fitnessBiasedSelection(int selectionSize) {
         generateRandomCollection();
 
         individuals.clear();
@@ -156,18 +179,37 @@ class GenerationHandler {
         for (int i = 0; i < numberOfTournaments; i++) {
             double bestFoundFitness = 0;
             for (int j = 0; j < tournamentSize; j++) {
-                int random = ThreadLocalRandom.current().nextInt(0, individuals.size() - 1);
+                int random = getNextChallenger(individuals.size());
                 Kette challenger = individuals.get(random);
-                if (challenger.calcFitness() > bestFoundFitness) {
-                    bestFoundFitness = challenger.calcFitness();
+                if (challenger.getFitness() > bestFoundFitness) {
+                    bestFoundFitness = challenger.getFitness();
                     champion = challenger;
                 }
             }
             champions.add(champion);
+            challengerList.clear();
         }
         individuals.clear();
 
         individuals.addAll(champions);
+    }
+
+    private int getNextChallenger(int size) {
+        int selected;
+        do {
+            selected = ThreadLocalRandom.current().nextInt(0, size - 1);
+        }while (isNotAllreadyChallenging(selected, challengerList));
+        challengerList.add(selected);
+        return selected;
+    }
+
+    private boolean isNotAllreadyChallenging(int selected, ArrayList<Integer> challengerList) {
+        for (int challenger : challengerList){
+            if (selected == challenger){
+                return true;
+            }
+        }
+        return false;
     }
 
     // todo: make it create 1 or 2 children
@@ -193,7 +235,7 @@ class GenerationHandler {
         double overallFitness = log.getSumOfFintessIn(this.generation - 1);
         double overallWeight = 0;
         for (Kette individual : individuals) {
-            double weight = (individual.calcFitness() / overallFitness);
+            double weight = (individual.getFitness() / overallFitness);
             weight = weight * 100;
             //overallWeight += weight;
             randomCollection.add(weight, individual);
@@ -202,17 +244,17 @@ class GenerationHandler {
     }
     
     void drawResult(int top) { // top defines the best x you want the image of
-        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.getFitness(), ketteA.getFitness()));
         for (int i = 0; i < top; i++) {
-            imageCreator.createImage(individuals.get(i).getPhenotype(), individuals.get(i).calcFitness(), individuals.get(i).calcOverlap(), individuals.get(i).calcMinEnergy(), Integer.toString(i) + ".png");
+            imageCreator.createImage(individuals.get(i).getPhenotype(), individuals.get(i).getFitness(), individuals.get(i).calcOverlap(), individuals.get(i).calcMinEnergy(), i + ".png");
             System.out.println();
-            individuals.get(i).printValues();
+            //individuals.get(i).printValues();
         }
     }
 
     private void createImageOfTheBestIn() {
-        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(), ketteA.calcFitness()));
-        imageCreator.createImage(individuals.get(0).getPhenotype(), individuals.get(0).calcFitness(), individuals.get(0).calcOverlap(), individuals.get(0).calcMinEnergy(), "Generation_" + Integer.toString(this.generation) + ".png");
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.getFitness(), ketteA.getFitness()));
+        imageCreator.createImage(individuals.get(0).getPhenotype(), individuals.get(0).getFitness(), individuals.get(0).calcOverlap(), individuals.get(0).calcMinEnergy(), "Generation_" + this.generation + ".png");
         //System.out.println();
         //individuals.get(0).printValues();
     }

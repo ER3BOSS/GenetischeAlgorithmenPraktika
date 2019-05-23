@@ -1,4 +1,3 @@
-import javafx.scene.chart.NumberAxis;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -31,7 +30,7 @@ class LineChart extends ApplicationFrame {
 
 
         ChartPanel chartPanel = new ChartPanel( lineChart );
-        chartPanel.setPreferredSize( new java.awt.Dimension( 560*2 , 367*2 ) );
+        chartPanel.setPreferredSize( new java.awt.Dimension( 460*2 , 267*2 ) );
         setContentPane( chartPanel );
     }
 }

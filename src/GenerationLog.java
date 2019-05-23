@@ -16,17 +16,17 @@ class GenerationLog {
     private Kette bestIndividual = new Kette("");
     private List<Double> fitnessListCurrentGeneration = new ArrayList<>();
     private List<Double> generationsAverageFitness = new ArrayList<>();
-    private List<Double> generationsBestFitness = new ArrayList<>();
+    private List<Kette> generationsBestIndividual = new ArrayList<>();
 
     void saveGeneration(List<Kette> individuals) {
         fitnessListCurrentGeneration.clear();
-        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.calcFitness(),ketteA.calcFitness()));
-        generationsBestFitness.add(individuals.get(0).calcFitness());
-        if(this.bestIndividual.calcFitness() < individuals.get(0).calcFitness())
+        individuals.sort((Kette ketteA, Kette ketteB) -> Double.compare(ketteB.getFitness(),ketteA.getFitness()));
+        generationsBestIndividual.add(individuals.get(0));
+        if(this.bestIndividual.getFitness() < individuals.get(0).getFitness())
         this.bestIndividual = individuals.get(0);
 
         for (Kette individual : individuals) {
-            fitnessListCurrentGeneration.add(individual.calcFitness());
+            fitnessListCurrentGeneration.add(individual.getFitness());
         }
         generationsAverageFitness.add(calcAverageFitness());
     }
@@ -35,12 +35,12 @@ class GenerationLog {
         return generationsAverageFitness.get(generation) * fitnessListCurrentGeneration.size();
     }
 
-    public double getAverageFitnessIn(int generation) {
+    double getAverageFitnessIn(int generation) {
         return generationsAverageFitness.get(generation);
     }
 
-    private double getGenerationsBestFitnessIn(int generation) {
-        return generationsBestFitness.get(generation);
+    private Kette getGenerationsBestFitnessIn(int generation) {
+        return generationsBestIndividual.get(generation);
     }
 
     private Double calcAverageFitness(){
@@ -54,21 +54,21 @@ class GenerationLog {
 
     void printLogTxt(int generation, DefaultCategoryDataset dataset){
         try (PrintWriter out = new PrintWriter(new FileWriter(new File("/ga" + File.separator +"!Log.txt"),true))) {
-            out.print((Integer.toString(generation) + "," + getAverageFitnessIn(generation)) + "," +
-                    getGenerationsBestFitnessIn(generation) + "," + bestIndividual.calcFitness() + "," +
+            out.print((generation + "," + getAverageFitnessIn(generation)) + "," +
+                    getGenerationsBestFitnessIn(generation).getFitness() + "," + bestIndividual.getFitness() + "," +
                     bestIndividual.calcMinEnergy() + "," + bestIndividual.calcOverlap());
 
             out.print("\n");
 
-            dataset.addValue(getGenerationsBestFitnessIn(generation) , "current best" , Integer.toString(generation));
-            dataset.addValue(bestIndividual.calcFitness() , "overall best" , Integer.toString(generation));
+            dataset.addValue(getGenerationsBestFitnessIn(generation).getFitness() , "current best" , Integer.toString(generation));
+            dataset.addValue(bestIndividual.getFitness() , "overall best" , Integer.toString(generation));
             dataset.addValue(getAverageFitnessIn(generation) , "average" , Integer.toString(generation));
 
         }catch (java.io.IOException e){
             System.out.println("Log file not found");
         }
         System.out.print(MessageFormat.format("Generation: {0} \t Average: {1} \t Best: {2} \t Energy: {3} \n", Integer.toString(generation),
-                Double.toString(getAverageFitnessIn(generation)), Double.toString(getGenerationsBestFitnessIn(generation)), Integer.toString(bestIndividual.calcMinEnergy())));
+                Double.toString(getAverageFitnessIn(generation)), Double.toString(getGenerationsBestFitnessIn(generation).getFitness()), Integer.toString(getGenerationsBestFitnessIn(generation).calcMinEnergy())));
 
     }
 
@@ -76,7 +76,7 @@ class GenerationLog {
         ImageCreator imageCreator = new ImageCreator();
         imageCreator.createImage(
                 bestIndividual.getPhenotype(),
-                bestIndividual.calcFitness(),
+                bestIndividual.getFitness(),
                 bestIndividual.calcOverlap(),
                 bestIndividual.calcMinEnergy(),
                 "!BestIndividual_S" + sequenzSize + ".png");
