@@ -14,8 +14,6 @@ class ImageTextWriter {
         int yMarginTop = 40+fontSize/4; // just works ...
 
         g2.setColor(Color.BLACK);
-        DecimalFormat df = new DecimalFormat("#.##");
-        df.setRoundingMode(RoundingMode.UP);
 
         String combinedString = getCombinedString(fitness, overlap, minEnergy);
 
@@ -32,8 +30,11 @@ class ImageTextWriter {
     }
 
     private static String getCombinedString(double fitness, int overlap, int minEnergy) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.UP);
+
         fitness = Math.round(fitness * 100.0) / 100.0;
-        String fitnessString = "Fitness: " + Double.toString(fitness);
+        String fitnessString = "Fitness: " + df.format(fitness);
         String overlapString = "Overlap: " + Integer.toString(overlap);
         String minEnergyString = "Energy: " + Integer.toString(minEnergy);
         return fitnessString+" | "+overlapString+" | "+minEnergyString;
