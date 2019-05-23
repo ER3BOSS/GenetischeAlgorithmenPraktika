@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 class ImageTextWriter {
     private ImageTextWriter() { //Static class
@@ -12,8 +14,10 @@ class ImageTextWriter {
         int yMarginTop = 40+fontSize/4; // just works ...
 
         g2.setColor(Color.BLACK);
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.UP);
 
-        String fitnessString = "Fitness: " + Double.toString(fitness).substring(0,4);
+        String fitnessString = "Fitness: " + df.format(fitness);
         String overlapString = "Overlap: " + Integer.toString(overlap);
         String minEnergyString = "Energy: " + Integer.toString(minEnergy);
         String combinedString = fitnessString+" | "+overlapString+" | "+minEnergyString;
