@@ -48,7 +48,7 @@ class GenerationHandler {
         //creation of the Graph
         LineChart chart = new LineChart(
                 "Fitness Graph",
-                "Live line graph showing the current progress",
+                "Current/Overall/Average",
                 dataset
         );
 
@@ -79,7 +79,7 @@ class GenerationHandler {
             crossover(crossoverRate);
             exploration();
             mutation(mutationRate);
-            makeSomeNewBlood();
+            //makeSomeNewBlood();
 
             log.saveGeneration(individuals);
             log.printLogTxt(generation, dataset);
