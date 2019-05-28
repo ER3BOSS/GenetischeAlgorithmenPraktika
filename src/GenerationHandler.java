@@ -71,7 +71,9 @@ class GenerationHandler {
         this.newBloodAmount = newBloodAmount;
         generation = 1;
 
-        while (generation < this.maxGenerations) { //&& improving(breakCondition)
+        long time = System.currentTimeMillis();
+        System.out.println(time);
+        while (generation < this.maxGenerations ) { //&& improving(breakCondition) && System.currentTimeMillis() < (time + 30000)
 
             selection(selectType);
             makeSomeNewBlood();
@@ -95,7 +97,7 @@ class GenerationHandler {
     private void exploration() {
         if (generation > maxGenerations / 10) {
             //explorationFactor = Math.toRadians(generation % 90) / 1000;
-            explorationFactor = Math.sin(generation) / 1000;
+            explorationFactor = Math.sin(generation/4) / 1000;
             System.out.println(explorationFactor);
         }
     }
