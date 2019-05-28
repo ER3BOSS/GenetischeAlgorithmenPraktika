@@ -60,7 +60,7 @@ class GenerationLog {
 
             out.print("\n");
 
-            dataset.addValue(getGenerationsBestFitnessIn(generation).getFitness() , "current best" , Integer.toString(generation));
+            dataset.addValue(getGenerationsBestFitnessIn(generation).getFitness() , "current best", Integer.toString(generation));
             dataset.addValue(bestIndividual.getFitness() , "overall best" , Integer.toString(generation));
             dataset.addValue(getAverageFitnessIn(generation) , "average" , Integer.toString(generation));
 

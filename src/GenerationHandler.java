@@ -167,21 +167,34 @@ class GenerationHandler {
 
     private void tournamentSelection(int tournamentSize, int numberOfTournaments) {
         ArrayList<Kette> champions = new ArrayList<>();
-        Kette champion = new Kette("");
-        Boolean challengerFound = false;
+        Kette kingOfTheHill = new Kette("");
+        Kette[] champion = new Kette[2];
+        Boolean championFound = false;
         for (int i = 0; i < numberOfTournaments; i++) {
             double bestFoundFitness = 0;
-            for (int j = 0; j < tournamentSize; j++) {
-                int random = getNextChallenger(individuals.size());
-                Kette challenger = individuals.get(random);
-                if (challenger.getFitness() > bestFoundFitness && goliad(challengerFound)) {
-                    bestFoundFitness = challenger.getFitness();
-                    champion = challenger;
-                    challengerFound = true;
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 2; k++) {
+                    int random = getNextChallenger(individuals.size());
+                    Kette challenger = individuals.get(random);
+                    if (challenger.getFitness() > bestFoundFitness && iFeelLucky(championFound)) {
+                        bestFoundFitness = challenger.getFitness();
+                        champion[j] = challenger;
+                        championFound = true;
+                    }
                 }
+                championFound = false;
+                bestFoundFitness = 0;
+
             }
-            challengerFound = false;
-            champions.add(champion);
+            if (champion[0].getFitness() > champion[1].getFitness()){
+                kingOfTheHill=champion[0];
+            }else{
+                kingOfTheHill=champion[1];
+            }
+
+
+            championFound = false;
+            champions.add(kingOfTheHill);
             challengerList.clear();
         }
         individuals.clear();
@@ -189,9 +202,9 @@ class GenerationHandler {
         individuals.addAll(champions);
     }
 
-    private boolean goliad(boolean challengerFound) {
+    private boolean iFeelLucky(boolean challengerFound) { //gives a worse canidate the chance to win
         if (challengerFound){
-            return Math.random() > 0.75;
+            return Math.random() > 0.25; // % Chance that the worse wins
         }
         return true;
     }
