@@ -64,6 +64,7 @@ class GenerationLog {
             dataset.addValue(bestIndividual.getFitness() , "overall best" , Integer.toString(generation));
             dataset.addValue(getAverageFitnessIn(generation) , "average" , Integer.toString(generation));
 
+
         }catch (java.io.IOException e){
             System.out.println("Log file not found");
         }
@@ -81,5 +82,14 @@ class GenerationLog {
                 bestIndividual.calcMinEnergy(),
                 "!BestIndividual_S" + sequenzSize + ".png");
         bestIndividual.printValues();
+    }
+
+    void getSumOfIndividualsWithOverlapp(List<Kette> individuals, int generation, DefaultCategoryDataset dataset){
+        int counter = 0;
+        for (Kette individual: individuals) {
+            if(individual.calcOverlap() > 0)
+                counter++;
+        }
+        dataset.addValue(counter / 1000, "Inividuals with Overlapps", Integer.toString(generation));
     }
 }

@@ -73,16 +73,17 @@ class GenerationHandler {
         this.selectionSize = generationSize / 2;
         generation = 1;
         long time = System.currentTimeMillis();
-        while (generation < this.maxGenerations && improving(breakCondition) && System.currentTimeMillis() < (time + 30000)) {
+        while (generation < this.maxGenerations && improving(breakCondition)) { //
 
             selection(selectType);
             crossover(crossoverRate);
-            exploration();
+            //exploration();
             mutation(mutationRate);
             //makeSomeNewBlood();
 
             log.saveGeneration(individuals);
             log.printLogTxt(generation, dataset);
+            log.getSumOfIndividualsWithOverlapp(individuals, generation, dataset);
 
             //Warning: massive performance hit!!
             //createImageOfTheBestIn();
@@ -95,9 +96,10 @@ class GenerationHandler {
     }
 
     private void exploration() {
-        if (generation > maxGenerations / 10) {
+        if (generation > maxGenerations / 8) {
             //explorationFactor = Math.toRadians(generation % 90) / 1000;
-            explorationFactor = Math.sin(generation/4) / 1000;
+            explorationFactor =  (Math.sin(Math.toRadians(generation))) / 25;
+
             System.out.println(explorationFactor);
         }
     }
