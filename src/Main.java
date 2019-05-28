@@ -15,7 +15,7 @@ class Main {
 
 
         GenerationHandler generationHandler = new GenerationHandler(SEQ50);
-        generationHandler.initializeGeneration(600);
+        generationHandler.initializeGeneration(10000);
 
         generationHandler.evolve(
                 1000,
@@ -23,7 +23,7 @@ class Main {
                 0.1,
                 0.1,
                 SelectType.FITNESS,
-                100
+                1000
         );
 
         generationHandler.drawResult(0);
