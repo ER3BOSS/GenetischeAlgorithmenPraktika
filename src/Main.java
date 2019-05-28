@@ -22,7 +22,7 @@ class Main {
                 0,
                 0.1,
                 0.1,
-                SelectType.FITNESS,
+                SelectType.TOURNAMENT,
                 100
         );
 

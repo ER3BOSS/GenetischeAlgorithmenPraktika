@@ -24,8 +24,10 @@ class LineChart extends ApplicationFrame {
         lineChart.getCategoryPlot().getRenderer().setSeriesStroke(0, new BasicStroke(2.0f));
         lineChart.getCategoryPlot().getRenderer().setSeriesStroke(1, new BasicStroke(2.0f));
         lineChart.getCategoryPlot().getRenderer().setSeriesStroke(2, new BasicStroke(2.0f));
+        lineChart.getCategoryPlot().getRenderer().setSeriesStroke(3, new BasicStroke(2.0f));
 
         lineChart.getCategoryPlot().getRenderer().setSeriesPaint(2, Color.magenta);
+        lineChart.getCategoryPlot().getRenderer().setSeriesPaint(3, Color.GREEN);
 
         lineChart.getPlot().setBackgroundPaint( Color.WHITE );
         lineChart.getCategoryPlot().setRangeGridlinePaint(Color.GRAY);
