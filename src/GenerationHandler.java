@@ -72,12 +72,12 @@ class GenerationHandler {
         this.newBloodAmount = newBloodAmount;
         this.selectionSize = generationSize / 2;
         generation = 1;
-
-        while (generation < this.maxGenerations && improving(breakCondition)) {
+        long time = System.currentTimeMillis();
+        while (generation < this.maxGenerations && improving(breakCondition) && System.currentTimeMillis() < (time + 30000)) {
 
             selection(selectType);
             crossover(crossoverRate);
-            exploration(breakCondition / 10);
+            exploration();
             mutation(mutationRate);
             makeSomeNewBlood();
 
@@ -94,20 +94,12 @@ class GenerationHandler {
         log.crateImageOfBestIndividual(sequence.length());
     }
 
-    private void exploration(int mutationFactor) {
+    private void exploration() {
         if (generation > maxGenerations / 10) {
-            double averageRate = log.getAverageFitnessIn(generation -1) / log.getAverageFitnessIn(generation - mutationFactor);
-            if (averageRate < 1 && explorationFactor < 0.1){
-                explorationFactor += 0.001;
-                System.out.println(averageRate);
-                System.out.println("Exploration: " + explorationFactor);
-            }
-            else if (averageRate > 1.1 && explorationFactor > -0.1){
-                explorationFactor -= 0.001;
-                System.out.println(averageRate);
-                System.out.println("Exploration: " + explorationFactor);
-            }
-            }
+            //explorationFactor = Math.toRadians(generation % 90) / 1000;
+            explorationFactor = Math.sin(generation/4) / 1000;
+            System.out.println(explorationFactor);
+        }
     }
 
     private boolean improving(int referenceGen){
