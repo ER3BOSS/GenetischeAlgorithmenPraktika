@@ -48,7 +48,7 @@ class GenerationHandler {
         //creation of the Graph
         LineChart chart = new LineChart(
                 "Fitness Graph",
-                "Live line graph showing the current progress",
+                "Current/Overall/Average",
                 dataset
         );
 
@@ -116,7 +116,7 @@ class GenerationHandler {
         // selection Process
         switch (selectType){
             case FITNESS:
-                fitnessBiasedSelection(selectionSize);
+                fitnessBiasedSelection(selectionSize, individuals);
                 break;
             case TOURNAMENT:
                 tournamentSelection(4, selectionSize);
@@ -155,13 +155,13 @@ class GenerationHandler {
     }
 
     // Program freezes if selection is bigger than generation Size
-    private void fitnessBiasedSelection(int selectionSize) {
+    private void fitnessBiasedSelection(int selectionSize, ArrayList<Kette> list) {
         generateRandomCollection();
 
-        individuals.clear();
+        list.clear();
 
         for (int i = 0; i < selectionSize; i++) {
-            individuals.add(randomCollection.next());
+            list.add(randomCollection.next());
         }
         randomCollection.clear();
     }
@@ -169,22 +169,32 @@ class GenerationHandler {
     private void tournamentSelection(int tournamentSize, int numberOfTournaments) {
         ArrayList<Kette> champions = new ArrayList<>();
         Kette champion = new Kette("");
+        Boolean challengerFound = false;
         for (int i = 0; i < numberOfTournaments; i++) {
             double bestFoundFitness = 0;
             for (int j = 0; j < tournamentSize; j++) {
                 int random = getNextChallenger(individuals.size());
                 Kette challenger = individuals.get(random);
-                if (challenger.getFitness() > bestFoundFitness) {
+                if (challenger.getFitness() > bestFoundFitness && goliad(challengerFound)) {
                     bestFoundFitness = challenger.getFitness();
                     champion = challenger;
+                    challengerFound = true;
                 }
             }
+            challengerFound = false;
             champions.add(champion);
             challengerList.clear();
         }
         individuals.clear();
 
         individuals.addAll(champions);
+    }
+
+    private boolean goliad(boolean challengerFound) {
+        if (challengerFound){
+            return Math.random() > 0.75;
+        }
+        return true;
     }
 
     private int getNextChallenger(int size) {
@@ -226,14 +236,11 @@ class GenerationHandler {
 
     private void generateRandomCollection() {
         double overallFitness = log.getSumOfFintessIn(this.generation - 1);
-        double overallWeight = 0;
         for (Kette individual : individuals) {
             double weight = (individual.getFitness() / overallFitness);
             weight = weight * 100;
-            //overallWeight += weight;
             randomCollection.add(weight, individual);
         }
-        //System.out.println("Overall weight in gen " + generation + " = " + overallWeight);
     }
     
     void drawResult(int top) { // top defines the best x you want the image of
