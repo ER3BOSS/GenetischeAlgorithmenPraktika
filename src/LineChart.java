@@ -21,13 +21,14 @@ class LineChart extends ApplicationFrame {
                 true,true,false
         );
 
-        lineChart.getCategoryPlot().getRenderer().setSeriesStroke(0, new BasicStroke(3.0f));
-        lineChart.getCategoryPlot().getRenderer().setSeriesStroke(1, new BasicStroke(3.0f));
-        lineChart.getCategoryPlot().getRenderer().setSeriesStroke(2, new BasicStroke(3.0f));
+        lineChart.getCategoryPlot().getRenderer().setSeriesStroke(0, new BasicStroke(2.0f));
+        lineChart.getCategoryPlot().getRenderer().setSeriesStroke(1, new BasicStroke(2.0f));
+        lineChart.getCategoryPlot().getRenderer().setSeriesStroke(2, new BasicStroke(2.0f));
 
         lineChart.getCategoryPlot().getRenderer().setSeriesPaint(2, Color.magenta);
 
-
+        lineChart.getPlot().setBackgroundPaint( Color.WHITE );
+        lineChart.getCategoryPlot().setRangeGridlinePaint(Color.GRAY);
 
         ChartPanel chartPanel = new ChartPanel( lineChart );
         chartPanel.setPreferredSize( new java.awt.Dimension( 460*2 , 267*2 ) );
